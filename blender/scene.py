@@ -302,7 +302,7 @@ def m_flour():
 
 
 # ------------------------------------------------------------------ scanned (Poly Haven, CC0) materials and models
-def m_scan(name, tid, scale=(1, 1, 1), rot=0.0, bump=1.0, value=1.0, sheen=0.0):
+def m_scan(name, tid, scale=(1, 1, 1), rot=0.0, bump=1.0, value=1.0, sheen=0.0, sat=1.0, tint=None):
     """Principled material from a Poly Haven texture set (diff / rough / nor_gl)."""
     m, nt, b, out = mat(name)
     tc = N(nt, 'ShaderNodeTexCoord')
@@ -321,8 +321,16 @@ def m_scan(name, tid, scale=(1, 1, 1), rot=0.0, bump=1.0, value=1.0, sheen=0.0):
     d = img('diff')
     hsv = N(nt, 'ShaderNodeHueSaturation')
     hsv.inputs['Value'].default_value = value
+    hsv.inputs['Saturation'].default_value = sat
     nt.links.new(d.outputs['Color'], hsv.inputs['Color'])
-    nt.links.new(hsv.outputs['Color'], b.inputs['Base Color'])
+    if tint:
+        mul = N(nt, 'ShaderNodeMixRGB', blend_type='MULTIPLY')
+        mul.inputs['Fac'].default_value = 1.0
+        mul.inputs['Color2'].default_value = rgb(tint)
+        nt.links.new(hsv.outputs['Color'], mul.inputs['Color1'])
+        nt.links.new(mul.outputs['Color'], b.inputs['Base Color'])
+    else:
+        nt.links.new(hsv.outputs['Color'], b.inputs['Base Color'])
     nt.links.new(img('rough', True).outputs['Color'], b.inputs['Roughness'])
     nm = N(nt, 'ShaderNodeNormalMap')
     nm.inputs['Strength'].default_value = bump
@@ -606,8 +614,8 @@ def build(use_assets=True):
     M = dict(table=m_wood_table(), linen=m_linen(), bread=m_bread(), crumb=m_crumb(), pin=m_pinwood(),
              steel=m_steel(), handle=m_handle(), flour=m_flour())
     if scans:
-        M['table'] = m_scan('TablePlanks', 'brown_planks_09', scale=(0.55, 0.55, 0.55), rot=math.pi / 2, bump=1.2, value=1.15)
-        M['linen'] = m_scan('RoughLinen', 'rough_linen', scale=(3.2, 3.2, 3.2), bump=1.6, value=1.25, sheen=0.3)
+        M['table'] = m_scan('TablePlanks', 'brown_planks_09', scale=(0.42, 0.42, 0.42), rot=math.pi / 2, bump=1.2, value=0.8, tint='#F2D9B8')
+        M['linen'] = m_scan('RoughLinen', 'rough_linen', scale=(3.2, 3.2, 3.2), bump=2.2, value=1.15, sheen=0.3, sat=0.0, tint='#E6D9BF')
     O = {}
     O['table'] = make_table(M)
     O['cloth'] = make_cloth(M, center=(0.0, 0.0), size=(0.56, 0.74))
