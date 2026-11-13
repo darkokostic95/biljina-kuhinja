@@ -4,10 +4,12 @@ Run:  Blender -b -P blender/scene.py -- [--save out.blend]
 Other scripts import build() from here.
 Units: metres. Table top is z = 0. Camera looks straight down (-Z); +Y is "up" on screen.
 """
-import bpy, bmesh, math, sys, random
+import bpy, bmesh, math, sys, random, os
 from mathutils import Vector, Euler
 
 U = 0.0022  # one logo (SVG) unit in metres
+ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')   # Poly Haven CC0 files (see ASSETS.md); optional
+HAS_ASSETS = os.path.isdir(os.path.join(ASSETS, 'tex'))
 
 
 def L(sx, sy):
@@ -298,6 +300,81 @@ def m_flour():
     return m
 
 
+
+# ------------------------------------------------------------------ scanned (Poly Haven, CC0) materials and models
+def m_scan(name, tid, scale=(1, 1, 1), rot=0.0, bump=1.0, value=1.0, sheen=0.0):
+    """Principled material from a Poly Haven texture set (diff / rough / nor_gl)."""
+    m, nt, b, out = mat(name)
+    tc = N(nt, 'ShaderNodeTexCoord')
+    mp = N(nt, 'ShaderNodeMapping')
+    mp.inputs['Scale'].default_value = scale
+    mp.inputs['Rotation'].default_value = (0, 0, rot)
+    nt.links.new(tc.outputs['Object'], mp.inputs['Vector'])
+
+    def img(short, data=False):
+        n = N(nt, 'ShaderNodeTexImage')
+        n.image = bpy.data.images.load(os.path.join(ASSETS, 'tex', f'{tid}_{short}.jpg'), check_existing=True)
+        if data:
+            n.image.colorspace_settings.name = 'Non-Color'
+        nt.links.new(mp.outputs['Vector'], n.inputs['Vector'])
+        return n
+    d = img('diff')
+    hsv = N(nt, 'ShaderNodeHueSaturation')
+    hsv.inputs['Value'].default_value = value
+    nt.links.new(d.outputs['Color'], hsv.inputs['Color'])
+    nt.links.new(hsv.outputs['Color'], b.inputs['Base Color'])
+    nt.links.new(img('rough', True).outputs['Color'], b.inputs['Roughness'])
+    nm = N(nt, 'ShaderNodeNormalMap')
+    nm.inputs['Strength'].default_value = bump
+    nt.links.new(img('nor', True).outputs['Color'], nm.inputs['Color'])
+    nt.links.new(nm.outputs['Normal'], b.inputs['Normal'])
+    b.inputs['Sheen Weight'].default_value = sheen
+    return m
+
+
+def import_gltf(folder, name):
+    before = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=os.path.join(ASSETS, folder, f'{folder}_1k.gltf'))
+    new = sorted(set(bpy.data.objects) - before, key=lambda o: o.name)
+    return [o for o in new if o.type == 'MESH']
+
+
+def make_bun_loaf(src, name, cx, cy, sx, sy, sz, rot):
+    """A scanned bun stretched into a small oval loaf."""
+    o = src
+    o.name = name
+    o.parent = None
+    bpy.context.view_layer.update()
+    # put the origin at the middle of the base so it sits on the table
+    bb = [Vector(c) for c in o.bound_box]
+    cxl = sum(v.x for v in bb) / 8
+    cyl = sum(v.y for v in bb) / 8
+    zmin = min(v.z for v in bb)
+    for v in o.data.vertices:
+        v.co.x -= cxl
+        v.co.y -= cyl
+        v.co.z -= zmin
+    o.rotation_mode = 'XYZ'
+    o.location = (cx, cy, 0.003)
+    o.rotation_euler = (0, 0, rot)
+    o.scale = (sx, sy, sz)
+    return o
+
+
+def world_hdri(strength=0.45, rot=0.0):
+    w = bpy.context.scene.world
+    nt = w.node_tree
+    bg = nt.nodes['Background']
+    tc = nt.nodes.new('ShaderNodeTexCoord')
+    mp = nt.nodes.new('ShaderNodeMapping')
+    mp.inputs['Rotation'].default_value = (0, 0, rot)
+    env = nt.nodes.new('ShaderNodeTexEnvironment')
+    env.image = bpy.data.images.load(os.path.join(ASSETS, 'hdri', 'comfy_cafe_1k.hdr'), check_existing=True)
+    nt.links.new(tc.outputs['Generated'], mp.inputs['Vector'])
+    nt.links.new(mp.outputs['Vector'], env.inputs['Vector'])
+    nt.links.new(env.outputs['Color'], bg.inputs['Color'])
+    bg.inputs['Strength'].default_value = strength
+
 # ------------------------------------------------------------------ objects
 def make_table(M):
     bpy.ops.mesh.primitive_plane_add(size=1)
@@ -523,10 +600,14 @@ def render_settings(w=1080, h=1920, samples=64, pct=100):
 
 
 # ------------------------------------------------------------------ build
-def build():
+def build(use_assets=True):
     reset()
+    scans = use_assets and HAS_ASSETS
     M = dict(table=m_wood_table(), linen=m_linen(), bread=m_bread(), crumb=m_crumb(), pin=m_pinwood(),
              steel=m_steel(), handle=m_handle(), flour=m_flour())
+    if scans:
+        M['table'] = m_scan('TablePlanks', 'brown_planks_09', scale=(0.55, 0.55, 0.55), rot=math.pi / 2, bump=1.2, value=1.15)
+        M['linen'] = m_scan('RoughLinen', 'rough_linen', scale=(3.2, 3.2, 3.2), bump=1.6, value=1.25, sheen=0.3)
     O = {}
     O['table'] = make_table(M)
     O['cloth'] = make_cloth(M, center=(0.0, 0.0), size=(0.56, 0.74))
@@ -535,14 +616,23 @@ def build():
     O['pin'] = make_pin(M, px, py, body_len=140 * U, r=14 * U, handle_len=17 * U, handle_r=6.5 * U)
     ux, uy = L(80, 65)
     lx, ly = L(86, 137)
-    O['loaf_top'] = make_loaf(M, 'LoafTop', ux, uy, rx=30 * U, ry=37 * U, h=0.05, seed=1, rot=math.radians(4))
-    O['loaf_bottom'] = make_loaf(M, 'LoafBottom', lx, ly, rx=35 * U, ry=37 * U, h=0.055, seed=2, rot=math.radians(-5))
+    if scans:
+        buns = import_gltf('hamburger_buns', 'bun')
+        O['loaf_top'] = make_bun_loaf(buns[0], 'LoafTop', ux, uy, 1.22, 1.38, 1.0, math.radians(12))
+        O['loaf_bottom'] = make_bun_loaf(buns[1], 'LoafBottom', lx, ly, 1.3, 1.5, 1.05, math.radians(200))
+        for extra in buns[2:]:
+            bpy.data.objects.remove(extra)
+    else:
+        O['loaf_top'] = make_loaf(M, 'LoafTop', ux, uy, rx=30 * U, ry=37 * U, h=0.05, seed=1, rot=math.radians(4))
+        O['loaf_bottom'] = make_loaf(M, 'LoafBottom', lx, ly, rx=35 * U, ry=37 * U, h=0.055, seed=2, rot=math.radians(-5))
     fx, fy = L(108, 96)
     kx, ky = L(110, 106)
     O['fork'] = make_fork(M, fx, fy, math.radians(40))
     O['knife'] = make_knife(M, kx, ky, math.radians(138))
     O['flour'] = make_flour(M, [(ux, uy, 0.07), (lx, ly, 0.08), (px, py, 0.05), (0.12, -0.02, 0.1)])
     make_light()
+    if scans:
+        world_hdri()
     O['cam'] = make_camera()
     render_settings()
     return O
