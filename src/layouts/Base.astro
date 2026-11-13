@@ -1,0 +1,101 @@
+---
+import '../styles/global.css';
+import { t, url, asset, type Lang } from '../lib/i18n';
+import { icon } from '../lib/icons';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  /** the same page in the other language */
+  alt: string;
+  active?: 'home' | 'search' | 'groups' | 'book' | 'favorites';
+  jsonld?: object;
+}
+const { lang, title, description, alt, active, jsonld } = Astro.props;
+const ui = t(lang);
+const other: Lang = lang === 'sr' ? 'en' : 'sr';
+const fullTitle = title ? `${title} · ${ui.site}` : `${ui.site} · ${ui.tagline}`;
+const desc = description ?? ui.desc;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const altAbs = new URL(alt, Astro.site).href;
+const og = new URL(asset('brand/og-image.png'), Astro.site).href;
+const nav = [
+  { id: 'home', href: url(lang, 'home'), label: ui.home, ic: 'home' },
+  { id: 'search', href: url(lang, 'search'), label: ui.search, ic: 'search' },
+  { id: 'groups', href: url(lang, 'recipes'), label: ui.groups, ic: 'grid' },
+  { id: 'book', href: url(lang, 'book'), label: ui.book, ic: 'book' },
+  { id: 'favorites', href: url(lang, 'favorites'), label: ui.favorites, ic: 'heart' },
+];
+---
+<!doctype html>
+<html lang={lang === 'sr' ? 'sr-Latn' : 'en'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={lang === 'sr' ? 'sr' : 'en'} href={canonical} />
+    <link rel="alternate" hreflang={other === 'sr' ? 'sr' : 'en'} href={altAbs} />
+    <meta name="theme-color" content="#F6EFE4" />
+    <link rel="icon" href={asset('favicon.ico')} sizes="48x48" />
+    <link rel="icon" href={asset('brand/favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={asset('brand/apple-touch-icon.png')} />
+    <link rel="manifest" href={asset('manifest.webmanifest')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={ui.site} />
+    <meta property="og:title" content={title ?? ui.site} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:image" content={og} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
+  </head>
+  <body data-lang={lang}>
+    <header class="head">
+      <div class="wrap">
+        <a class="logo" href={url(lang, 'home')} aria-label={ui.site}>
+          <img src={asset('brand/logo-horizontal.svg')} alt={ui.site} width="675" height="202" />
+        </a>
+        <nav aria-label="Main">
+          {nav.slice(2).map((n) => <a href={n.href} aria-current={active === n.id ? 'page' : undefined}>{n.label}</a>)}
+        </nav>
+        <span class="sp"></span>
+        <a class="lang" href={alt} hreflang={other} data-lang-switch>{other === 'en' ? 'EN' : 'SR'}</a>
+        <a class="icon-btn" href={url(lang, 'search')} aria-label={ui.search}><Fragment set:html={icon('search')} /></a>
+      </div>
+    </header>
+
+    <main><slot /></main>
+
+    <footer class="foot">
+      <div class="wrap">
+        <img src={asset('brand/mark.svg')} alt="" width="177" height="202" loading="lazy" />
+        <p>{ui.footer}</p>
+        <p>{ui.offline}</p>
+      </div>
+    </footer>
+
+    <nav class="tabbar" aria-label="Tabs">
+      {nav.map((n) => (
+        <a href={n.href} aria-current={active === n.id ? 'page' : undefined}>
+          <Fragment set:html={icon(n.ic)} />
+          <span>{n.label}</span>
+        </a>
+      ))}
+    </nav>
+    <div class="toast" id="toast" role="status"></div>
+
+    <script>
+      // remember the chosen language; offline support
+      const lang = document.body.dataset.lang!;
+      document.querySelector('[data-lang-switch]')?.addEventListener('click', () => {
+        try { localStorage.setItem('bk:lang', lang === 'sr' ? 'en' : 'sr'); } catch {}
+      });
+      if ('serviceWorker' in navigator && location.hostname !== 'localhost') {
+        navigator.serviceWorker.register(import.meta.env.BASE_URL.replace(/\/$/, '') + '/sw.js').catch(() => {});
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+---
+import V from '../../../views/CategoryView.astro';
+import { CATEGORIES } from '../../../lib/i18n';
+export const getStaticPaths = () => CATEGORIES.map((c) => ({ params: { category: c.id } }));
+---
+<V lang="en" category={Astro.params.category!} />

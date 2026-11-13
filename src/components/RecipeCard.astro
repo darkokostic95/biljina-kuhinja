@@ -1,0 +1,20 @@
+---
+import { catById, tagLabel, url, type Lang } from '../lib/i18n';
+import { icon } from '../lib/icons';
+import type { Recipe } from '../lib/recipes';
+interface Props { r: Recipe; lang: Lang; showCat?: boolean }
+const { r, lang, showCat = true } = Astro.props;
+const c = catById(r.category);
+const show = r.tags.filter((g) => ['posno', 'brzo', 'video'].includes(g)).slice(0, 2);
+---
+<a class="card" href={url(lang, 'recipe', r.slug)} data-tags={r.tags.join(' ')}>
+  <span class="thumb" style={`background:${c.tint}`}>{c.icon}</span>
+  <span class="body">
+    <span class="ttl">{r.title[lang]}</span>
+    <span class="meta">
+      {showCat && <span>{c[lang]}</span>}
+      {show.map((g) => <span class={`tag t-${g}`}>{tagLabel(g, lang)}</span>)}
+    </span>
+  </span>
+  <Fragment set:html={icon('chev', 'chev')} />
+</a>

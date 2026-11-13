@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import { CATEGORIES, catById, t, url, plural, type Lang } from '../lib/i18n';
+import { allRecipes, sortFor } from '../lib/recipes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+const all = sortFor(await allRecipes(), lang);
+const count = (id: string) => all.filter((r) => r.category === id).length;
+---
+<Base lang={lang} title={ui.allRecipes} alt={url(lang === 'sr' ? 'en' : 'sr', 'recipes')} active="groups">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>{ui.groupsTitle}</h1>
+      <p class="lead">{plural(all.length, lang)}</p>
+    </div>
+    <section style="margin-top:14px">
+      <div class="cats">
+        {CATEGORIES.map((c) => (
+          <a class="cat" href={url(lang, 'category', c.id)} style={`background:${c.tint}`}>
+            <span class="ico" aria-hidden="true">{c.icon}</span>
+            <b>{c[lang]}</b>
+            <span>{plural(count(c.id), lang)}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+    <section>
+      <div class="sec-head"><h2>{ui.allRecipes} A–Ž</h2></div>
+      <div class="alpha">
+        {all.map((r) => <a href={url(lang, 'recipe', r.slug)}><span>{r.title[lang]}</span><small>{catById(r.category)[lang]}</small></a>)}
+      </div>
+    </section>
+  </div>
+</Base>

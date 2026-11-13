@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biljina Kuhinja — logo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --cream:#FBF6EC; --ink:#2B3A67; --tomato:#D9483B; --butter:#F2C14E; --basil:#5B8C5A; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--cream); color:var(--ink); font-family:Nunito, sans-serif;
+         background-image: linear-gradient(#2b3a6712 1px, transparent 1px), linear-gradient(90deg, #2b3a6712 1px, transparent 1px);
+         background-size: 24px 24px; }
+  h1 { font-family:Caveat, cursive; font-size:44px; text-align:center; margin:28px 0 4px; }
+  p.lead { text-align:center; margin:0 0 24px; opacity:.75; }
+  .grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; max-width:1180px; margin:0 auto; padding:0 16px 32px; }
+  .card { background:#fff; border-radius:18px; padding:22px 18px 16px; box-shadow:0 2px 0 #2b3a6722, 0 10px 30px #2b3a6714; text-align:center; }
+  .card h2 { font-size:15px; letter-spacing:.06em; text-transform:uppercase; margin:14px 0 4px; }
+  .card p { margin:0; font-size:14px; opacity:.75; }
+  .card svg.main { width:100%; max-width:300px; height:auto; }
+  .small { display:flex; justify-content:center; align-items:center; gap:14px; margin-top:12px; }
+  .small svg { width:36px; height:36px; }
+  .small .app { width:56px; height:56px; border-radius:14px; background:var(--ink); display:grid; place-items:center; }
+  .small .app svg { width:44px; height:44px; }
+  .small .dark { width:56px; height:56px; border-radius:50%; background:var(--tomato); display:grid; place-items:center; }
+  .small .dark svg { width:44px; height:44px; }
+  @media (max-width: 860px) { .grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<h1>Biljina Kuhinja — 3 predloga logoa</h1>
+<p class="lead">Ispod svakog: favikon, ikonica za telefon i verzija na boji.</p>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- chef's hat (toque), 200x200 box, puff + band -->
+    <symbol id="hat-puff" viewBox="0 0 200 200">
+      <path d="M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="grid">
+
+  <!-- ===== 1. Monogram in the hat ===== -->
+  <div class="card">
+    <svg class="main" viewBox="0 0 300 300" aria-label="Koncept 1">
+      <g transform="translate(50 18)">
+        <!-- puff -->
+        <path d="M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z"
+              fill="#fff" stroke="#2B3A67" stroke-width="7" stroke-linejoin="round"/>
+        <!-- pleats -->
+        <path d="M82 120 C78 104 80 92 86 84 M104 120 V 76 M126 120 C130 104 128 92 122 84"
+              fill="none" stroke="#2B3A67" stroke-width="4" stroke-linecap="round" opacity=".45"/>
+        <!-- band -->
+        <rect x="58" y="118" width="88" height="46" rx="8" fill="#D9483B" stroke="#2B3A67" stroke-width="7"/>
+        <text x="102" y="155" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="44" fill="#FBF6EC">BK</text>
+      </g>
+      <text x="150" y="236" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="46" fill="#2B3A67">Biljina Kuhinja</text>
+      <path d="M78 250 C120 260 180 260 222 250" fill="none" stroke="#F2C14E" stroke-width="6" stroke-linecap="round"/>
+    </svg>
+    <h2>1 · Monogram na kapi</h2>
+    <p>Kuvarska kapa, a na traci „BK“. Najjednostavniji, najbolje se vidi kao mala ikonica.</p>
+    <div class="small">
+      <svg viewBox="40 30 130 140"><path d="M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z" fill="#fff" stroke="#2B3A67" stroke-width="9" stroke-linejoin="round"/><rect x="58" y="118" width="88" height="46" rx="8" fill="#D9483B" stroke="#2B3A67" stroke-width="9"/><text x="102" y="156" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="46" fill="#FBF6EC">BK</text></svg>
+      <div class="app"><svg viewBox="40 30 130 140"><path d="M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z" fill="#FBF6EC"/><rect x="58" y="118" width="88" height="46" rx="8" fill="#D9483B"/><text x="102" y="156" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="46" fill="#FBF6EC">BK</text></svg></div>
+      <div class="dark"><svg viewBox="40 30 130 140"><path d="M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z" fill="#FBF6EC"/><rect x="58" y="118" width="88" height="46" rx="8" fill="#2B3A67"/><text x="102" y="156" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="46" fill="#FBF6EC">BK</text></svg></div>
+    </div>
+  </div>
+
+  <!-- ===== 2. B with hat + wooden spoon K ===== -->
+  <div class="card">
+    <svg class="main" viewBox="0 0 300 300" aria-label="Koncept 2">
+      <!-- B -->
+      <text x="58" y="196" font-family="Caveat" font-weight="700" font-size="170" fill="#2B3A67">B</text>
+      <!-- hat sitting on the B, tilted -->
+      <g transform="translate(40 -6) rotate(-14 100 120) scale(.62)">
+        <path d="M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z"
+              fill="#fff" stroke="#2B3A67" stroke-width="10" stroke-linejoin="round"/>
+        <path d="M84 120 C80 104 82 92 88 84 M104 120 V 76 M124 120 C128 104 126 92 120 84"
+              fill="none" stroke="#2B3A67" stroke-width="6" stroke-linecap="round" opacity=".45"/>
+        <rect x="58" y="118" width="88" height="30" rx="7" fill="#D9483B" stroke="#2B3A67" stroke-width="10"/>
+      </g>
+      <!-- K: wooden spoon as the stem -->
+      <g>
+        <ellipse cx="176" cy="92" rx="15" ry="22" fill="#E2A65B" stroke="#2B3A67" stroke-width="6"/>
+        <ellipse cx="176" cy="92" rx="7" ry="12" fill="#C98A3F" opacity=".7"/>
+        <rect x="170" y="112" width="12" height="84" rx="6" fill="#E2A65B" stroke="#2B3A67" stroke-width="6"/>
+        <path d="M184 150 L226 104" stroke="#D9483B" stroke-width="14" stroke-linecap="round" fill="none"/>
+        <path d="M188 148 L230 196" stroke="#D9483B" stroke-width="14" stroke-linecap="round" fill="none"/>
+      </g>
+      <text x="150" y="250" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="46" fill="#2B3A67">Biljina Kuhinja</text>
+    </svg>
+    <h2>2 · „B“ sa kapom, kašika kao „K“</h2>
+    <p>Razigraniji: kapa sedi na slovu B, a drvena kašika je stub slova K.</p>
+    <div class="small">
+      <svg viewBox="40 40 200 180"><text x="58" y="196" font-family="Caveat" font-weight="700" font-size="170" fill="#2B3A67">B</text><ellipse cx="176" cy="92" rx="15" ry="22" fill="#E2A65B" stroke="#2B3A67" stroke-width="8"/><rect x="170" y="112" width="12" height="84" rx="6" fill="#E2A65B" stroke="#2B3A67" stroke-width="8"/><path d="M184 150 L226 104 M188 148 L230 196" stroke="#D9483B" stroke-width="18" stroke-linecap="round"/></svg>
+      <div class="app"><svg viewBox="40 40 200 180"><text x="58" y="196" font-family="Caveat" font-weight="700" font-size="170" fill="#FBF6EC">B</text><ellipse cx="176" cy="92" rx="15" ry="22" fill="#F2C14E"/><rect x="170" y="112" width="12" height="84" rx="6" fill="#F2C14E"/><path d="M184 150 L226 104 M188 148 L230 196" stroke="#D9483B" stroke-width="18" stroke-linecap="round"/></svg></div>
+      <div class="dark"><svg viewBox="40 40 200 180"><text x="58" y="196" font-family="Caveat" font-weight="700" font-size="170" fill="#FBF6EC">B</text><ellipse cx="176" cy="92" rx="15" ry="22" fill="#F2C14E"/><rect x="170" y="112" width="12" height="84" rx="6" fill="#F2C14E"/><path d="M184 150 L226 104 M188 148 L230 196" stroke="#2B3A67" stroke-width="18" stroke-linecap="round"/></svg></div>
+    </div>
+  </div>
+
+  <!-- ===== 3. Round stamp / jar label ===== -->
+  <div class="card">
+    <svg class="main" viewBox="0 0 300 300" aria-label="Koncept 3">
+      <defs>
+        <path id="arcTop" d="M58 150 A92 92 0 0 1 242 150"/>
+        <path id="arcBot" d="M44 150 A106 106 0 0 0 256 150"/>
+      </defs>
+      <circle cx="150" cy="150" r="132" fill="#FBF6EC" stroke="#2B3A67" stroke-width="7"/>
+      <circle cx="150" cy="150" r="120" fill="none" stroke="#2B3A67" stroke-width="2.5" stroke-dasharray="2 7" stroke-linecap="round"/>
+      <circle cx="150" cy="150" r="80" fill="#D9483B"/>
+      <text font-family="Nunito" font-weight="800" font-size="22" letter-spacing="5" fill="#2B3A67">
+        <textPath href="#arcTop" startOffset="50%" text-anchor="middle">BILJINA KUHINJA</textPath>
+      </text>
+      <text font-family="Nunito" font-weight="800" font-size="16" letter-spacing="4" fill="#2B3A67">
+        <textPath href="#arcBot" startOffset="50%" text-anchor="middle">DOMAĆI RECEPTI</textPath>
+      </text>
+      <circle cx="35" cy="150" r="5" fill="#F2C14E"/>
+      <circle cx="265" cy="150" r="5" fill="#F2C14E"/>
+      <!-- hat in the middle -->
+      <g transform="translate(150 150) scale(.62) translate(-104 -112)">
+        <path d="M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z"
+              fill="#FBF6EC"/>
+        <path d="M84 120 C80 104 82 92 88 84 M104 120 V 76 M124 120 C128 104 126 92 120 84"
+              fill="none" stroke="#D9483B" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+        <rect x="58" y="118" width="92" height="50" rx="9" fill="#FBF6EC"/>
+        <text x="104" y="158" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="48" fill="#D9483B">BK</text>
+      </g>
+    </svg>
+    <h2>3 · Pečat kao na teglici</h2>
+    <p>Okrugla etiketa kao na zimnici. Najviše „domaći“ izgled, lepo za deljenje na mrežama.</p>
+    <div class="small">
+      <svg viewBox="0 0 300 300"><circle cx="150" cy="150" r="140" fill="#D9483B"/><g transform="translate(150 150) scale(1.55) translate(-104 -108)"><path d="M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z" fill="#FBF6EC"/><rect x="58" y="118" width="92" height="50" rx="9" fill="#FBF6EC"/><text x="104" y="158" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="48" fill="#D9483B">BK</text></g></svg>
+      <div class="app"><svg viewBox="0 0 300 300"><circle cx="150" cy="150" r="132" fill="#D9483B"/><g transform="translate(150 150) scale(1.45) translate(-104 -108)"><path d="M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z" fill="#FBF6EC"/><rect x="58" y="118" width="92" height="50" rx="9" fill="#FBF6EC"/><text x="104" y="158" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="48" fill="#D9483B">BK</text></g></svg></div>
+      <div class="dark"><svg viewBox="0 0 300 300"><circle cx="150" cy="150" r="132" fill="#2B3A67"/><g transform="translate(150 150) scale(1.45) translate(-104 -108)"><path d="M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z" fill="#FBF6EC"/><rect x="58" y="118" width="92" height="50" rx="9" fill="#FBF6EC"/><text x="104" y="158" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="48" fill="#2B3A67">BK</text></g></svg></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

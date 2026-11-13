@@ -98,18 +98,15 @@ uncertain: []                    # anything still unclear
 
 ## Phase 2 — Brand: logo and look
 
-### Logo
-- An SVG logo: a **chef's hat (toque) whose folds form the letters "BK"**, with "Biljina Kuhinja" in a warm handwritten script.
-- I'll draw **3 concepts** for you to pick from:
-  1. the BK monogram inside the hat
-  2. the hat sitting on a "B" with a wooden spoon as the "K"
-  3. a round stamp/badge like on a jar of zimnica
-- Exports: favicon, app icon (PWA/home screen), and a social-share image.
+### Logo — final (Darko, 2026-11-13): S3a
+- **B** = rolling pin with two loaves of bread; a **fork (up) and knife (down)** come out of the bread's "waist" and form the **K**. One connected mark, flat illustrated style with espresso outlines.
+- Files in `public/brand/`: `mark.svg` (colour), `mark-flat.svg` (no outlines, for terracotta/dark), `favicon.svg` + `public/favicon.ico`, `logo-horizontal.svg` (+ `-light`), `logo-stacked.svg`, `icon-192/512.png`, `apple-touch-icon.png`, `icon-maskable-512.png`, `og-image.png` (1200×630 share image). Wordmark text is outlined to paths, so it renders the same everywhere.
+- Explorations kept in `design/` (logo-concepts, palettes, fonts, monogram-*.html). Generator: `design/monogram-s3.html` (parts + `FK`).
 
 ### Visual direction: "Mamina sveska" (mom's notebook)
 - Background textures taken from the real notebook: **grid paper** and cream paper with ink-blue handwriting accents. The site looks like her notebook brought to life.
-- Palette: flour cream `#FBF6EC`, ink blue `#2B3A67`, tomato red `#D9483B`, butter yellow `#F2C14E`, basil green `#5B8C5A`.
-- Fonts (Google Fonts, Latin Extended so č ć š ž đ display correctly): a handwritten display font for titles (e.g. *Caveat* / *Kalam*) and a clean readable font for the text (e.g. *Nunito* / *Source Sans 3*).
+- Palette **B · Seoska kuhinja** (Darko, 2026-11-13): linen `#F6EFE4`, espresso `#3B2A20`, terracotta `#C0643B`, honey `#E0A53C`, olive `#7A8450`, card paper `#FFFBF5`, soft tint `#EED9C4`.
+- Fonts: **Bricolage Grotesque** for everything (Darko, 2026-11-13), no handwriting fonts. Google Fonts, Latin Extended (č ć š ž đ).
 - Every recipe page has an **"Original zapis"** toggle that shows Bilja's handwritten page, compressed to WebP.
 
 ### Food pictures
@@ -121,6 +118,8 @@ We have no photos of the finished dishes, only the notebook pages. Options (your
 ---
 
 ## Phase 3 — Website
+
+> **Superseded in detail by [`WEBSITE-PLAN.md`](WEBSITE-PLAN.md) (2026-11-13)**: "Biljin sto" photoreal Blender scroll story, tech stack, render pipeline. Where the two differ, WEBSITE-PLAN.md wins.
 
 ### Tech stack
 - **Astro** (static site generator). Every recipe becomes its own real HTML page. That matters for sharing: Viber, WhatsApp and Facebook show a proper preview card with the recipe name and image.
@@ -165,6 +164,14 @@ Everything runs on the phone with no server. A small search index is built along
 - The tiramisu page also has the YouTube video. It uses a lightweight embed that only loads YouTube when tapped.
 - Google Recipe structured data (schema.org), so the recipe can show up nicely in Google.
 
+### "Čitaj kao knjigu" — book view (Darko, 2026-11-13)
+- A second way to read the recipes: **as a real cookbook with page-turning**. A "Knjiga" button on the home page and on every group opens it.
+- **Desktop/tablet:** an open book with two pages side by side. Drag a page corner or use the arrows/keyboard and the page curls and turns. **Phone:** one page at a time, swipe to turn, same page-curl animation.
+- Book layout: cover with the logo → table of contents by group (tap a group to jump) → a divider page per group → one recipe per page (title, ingredients, steps in handwriting-style font on notebook paper). Long recipes continue on the next page.
+- The book can be opened for one group only (e.g. only "Torte") or the whole collection. Each page has its own link (`/knjiga/torte#<recept>`), so a shared link opens the book at that recipe, and "Otvori recept" on a page goes to the normal recipe page.
+- Pages are made only when you reach them (the 2 pages around the current one), so the 288-recipe book stays fast on phones.
+- Built with **StPageFlip** (`page-flip`, MIT, ~40 KB, works with touch). Paper sound on turn is optional and off by default. With "reduce motion" on, pages slide instead of curling.
+
 ### Mobile-first details
 - Designed at 375 px first, with thumb-reachable bottom navigation (Početna · Pretraga · Grupe · Omiljeni).
 - Lighthouse target ≥ 90 on mobile. Images are WebP at several sizes and lazy-loaded.
@@ -174,6 +181,8 @@ Everything runs on the phone with no server. A small search index is built along
 ---
 
 ## Phase 4 — Home page scroll animation
+
+> Replaced by `WEBSITE-PLAN.md` §2, §5, §6 (realistic Cycles render, not stylized clay).
 
 ### Concept: "Od sveske do tanjira" (from the notebook to the plate)
 As you scroll:

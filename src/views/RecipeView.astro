@@ -1,0 +1,131 @@
+---
+import Base from '../layouts/Base.astro';
+import RecipeCard from '../components/RecipeCard.astro';
+import { catById, t, url, tagLabel, type Lang } from '../lib/i18n';
+import { allRecipes, similar, type Recipe } from '../lib/recipes';
+import { icon } from '../lib/icons';
+interface Props { lang: Lang; r: Recipe }
+const { lang, r } = Astro.props;
+const ui = t(lang);
+const c = catById(r.category);
+const sim = similar(r, await allRecipes());
+const allIng = r.ingredients.flatMap((g) => g[lang]);
+const desc = `${r.title[lang]}: ${allIng.slice(0, 6).join(', ')}…`;
+const jsonld = {
+  '@context': 'https://schema.org', '@type': 'Recipe',
+  name: r.title[lang], inLanguage: lang === 'sr' ? 'sr-Latn' : 'en',
+  recipeCategory: c[lang], keywords: r.tags.map((g) => tagLabel(g, lang)).join(', '),
+  recipeIngredient: allIng,
+  recipeInstructions: r.steps[lang].map((s) => ({ '@type': 'HowToStep', text: s })),
+  author: { '@type': 'Organization', name: 'Biljina Kuhinja' },
+  ...(r.video ? { video: { '@type': 'VideoObject', name: r.title[lang], embedUrl: `https://www.youtube.com/embed/${r.video}`, thumbnailUrl: `https://i.ytimg.com/vi/${r.video}/hqdefault.jpg`, description: desc, uploadDate: '2024-01-01' } } : {}),
+};
+---
+<Base lang={lang} title={r.title[lang]} description={desc} alt={url(lang === 'sr' ? 'en' : 'sr', 'recipe', r.slug)} jsonld={jsonld}>
+  <article class="wrap" data-recipe={r.slug} data-title={r.title[lang]}>
+    <div class="recipe-top">
+      <a class="crumb" style="font-size:14px;font-weight:700;color:var(--main);display:inline-flex;align-items:center;gap:4px;min-height:36px" href={url(lang, 'category', r.category)}>
+        <Fragment set:html={icon('back')} /><span>{c[lang]}</span>
+      </a>
+      <h1>{r.title[lang]}</h1>
+      {r.tags.length > 0 && <div class="tags">{r.tags.map((g) => <a class={`tag t-${g}`} href={`${url(lang, 'search')}?q=${encodeURIComponent(tagLabel(g, lang))}`}>{tagLabel(g, lang)}</a>)}</div>}
+      <div class="actions">
+        <button class="act" type="button" data-share><Fragment set:html={icon('share')} /><span>{ui.share}</span></button>
+        <button class="act" type="button" data-fav aria-pressed="false" data-on={ui.saved} data-off={ui.save}><Fragment set:html={icon('heart', 'heart')} /><span>{ui.save}</span></button>
+        <button class="act" type="button" data-cook aria-pressed="false" data-msg={ui.cookOn}><Fragment set:html={icon('flame')} /><span>{ui.cook}</span></button>
+      </div>
+    </div>
+
+    {r.video && (
+      <div>
+        <div class="video" data-video={r.video}>
+          <img src={`https://i.ytimg.com/vi/${r.video}/hqdefault.jpg`} alt="" loading="lazy" />
+          <button type="button" aria-label={ui.watchVideo}><span><Fragment set:html={icon('play')} /></span></button>
+        </div>
+        {r.video_credit && <p class="credit">{ui.videoBy}{r.video_credit} (YouTube)</p>}
+      </div>
+    )}
+
+    <div class="recipe-cols">
+      <div class="block">
+        <h2>{ui.ingredients}</h2>
+        {r.ingredients.map((g, gi) => (
+          <>
+            {(r.ingredients.length > 1 || g.group[lang]) && <h3>{g.group[lang]}</h3>}
+            <ul class="ing">
+              {g[lang].map((line, i) => <li><label><input type="checkbox" data-k={`${gi}-${i}`} /><span>{line}</span></label></li>)}
+            </ul>
+          </>
+        ))}
+      </div>
+      <div>
+        <div class="block">
+          <h2>{ui.steps}</h2>
+          <ol class="steps">{r.steps[lang].map((s) => <li><span>{s}</span></li>)}</ol>
+        </div>
+        {r.notes?.[lang] && <div class="block note"><h2>{ui.notes}</h2><p>{r.notes[lang]}</p></div>}
+      </div>
+    </div>
+
+    {sim.length > 0 && (
+      <section class="similar">
+        <div class="sec-head"><h2>{ui.similar}</h2></div>
+        <div class="grid">{sim.map((x) => <RecipeCard r={x} lang={lang} />)}</div>
+      </section>
+    )}
+  </article>
+</Base>
+
+<script>
+  import { favs, toggleFav } from '../lib/search-client';
+  const root = document.querySelector<HTMLElement>('[data-recipe]')!;
+  const slug = root.dataset.recipe!;
+  const toastEl = document.getElementById('toast')!;
+  let tt = 0;
+  const toast = (m: string) => { toastEl.textContent = m; toastEl.classList.add('show'); clearTimeout(tt); tt = window.setTimeout(() => toastEl.classList.remove('show'), 1800); };
+
+  // share
+  root.querySelector('[data-share]')!.addEventListener('click', async () => {
+    const data = { title: root.dataset.title!, text: root.dataset.title!, url: location.href.split('#')[0] };
+    if (navigator.share) { try { await navigator.share(data); } catch {} return; }
+    try { await navigator.clipboard.writeText(data.url); toast(document.documentElement.lang.startsWith('sr') ? 'Link je kopiran' : 'Link copied'); } catch { prompt('Link:', data.url); }
+  });
+
+  // favorite
+  const fav = root.querySelector<HTMLElement>('[data-fav]')!;
+  const paint = (on: boolean) => { fav.setAttribute('aria-pressed', String(on)); fav.querySelector('span')!.textContent = on ? fav.dataset.on! : fav.dataset.off!; };
+  paint(favs().includes(slug));
+  fav.addEventListener('click', () => paint(toggleFav(slug)));
+
+  // cooking mode: bigger text, screen stays on
+  const cook = root.querySelector<HTMLElement>('[data-cook]')!;
+  let lock: any = null;
+  const setCook = async (on: boolean) => {
+    cook.setAttribute('aria-pressed', String(on));
+    document.body.classList.toggle('cooking', on);
+    try {
+      if (on && 'wakeLock' in navigator) { lock = await (navigator as any).wakeLock.request('screen'); toast(cook.dataset.msg!); }
+      else if (!on && lock) { await lock.release(); lock = null; }
+    } catch {}
+  };
+  cook.addEventListener('click', () => setCook(cook.getAttribute('aria-pressed') !== 'true'));
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && cook.getAttribute('aria-pressed') === 'true') setCook(true); });
+
+  // remember ticked ingredients for this visit
+  const key = 'bk:ing:' + slug;
+  let ticked: string[] = [];
+  try { ticked = JSON.parse(sessionStorage.getItem(key) || '[]'); } catch {}
+  root.querySelectorAll<HTMLInputElement>('.ing input').forEach((cb) => {
+    cb.checked = ticked.includes(cb.dataset.k!);
+    cb.addEventListener('change', () => {
+      ticked = [...root.querySelectorAll<HTMLInputElement>('.ing input:checked')].map((x) => x.dataset.k!);
+      try { sessionStorage.setItem(key, JSON.stringify(ticked)); } catch {}
+    });
+  });
+
+  // video: load YouTube only when tapped
+  root.querySelector<HTMLElement>('[data-video]')?.addEventListener('click', (e) => {
+    const box = e.currentTarget as HTMLElement;
+    box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${box.dataset.video}?autoplay=1&playsinline=1" title="YouTube" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  }, { once: true });
+</script>

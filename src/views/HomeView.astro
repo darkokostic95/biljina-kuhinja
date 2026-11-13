@@ -1,0 +1,104 @@
+---
+import Base from '../layouts/Base.astro';
+import SearchBox from '../components/SearchBox.astro';
+import RecipeCard from '../components/RecipeCard.astro';
+import { CATEGORIES, t, url, asset, plural, tagLabel, type Lang } from '../lib/i18n';
+import { allRecipes } from '../lib/recipes';
+import { icon } from '../lib/icons';
+import Story from '../components/Story.astro';
+import fs from 'node:fs';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+const all = await allRecipes();
+const count = (id: string) => all.filter((r) => r.category === id).length;
+const pick = ['tiramisu', ...['torte', 'peciva', 'glavna-jela', 'pite', 'zimnica'].map((c) => all.find((r) => r.category === c && r.slug !== 'tiramisu')!.slug)];
+const featured = pick.map((s) => all.find((r) => r.slug === s)!).filter(Boolean);
+// the scroll story is used only when rendered frames exist in public/hero/m
+let hero: { count: number; w: number; h: number } | null = null;
+try { hero = JSON.parse(fs.readFileSync('public/hero/m/manifest.json', 'utf8')); if (!hero!.count) hero = null; } catch {}
+const quick = ['posno', 'brzo', 'bez-pecenja', 'cokolada', 'orasi', 'praznicno'];
+const jsonld = { '@context': 'https://schema.org', '@type': 'WebSite', name: ui.site, url: new URL(url(lang, 'home'), Astro.site).href, inLanguage: lang === 'sr' ? 'sr-Latn' : 'en' };
+---
+<Base lang={lang} alt={url(lang === 'sr' ? 'en' : 'sr', 'home')} active="home" jsonld={jsonld}>
+  {hero && <Story lang={lang} count={hero.count} w={hero.w} h={hero.h} total={all.length} />}
+  <div class="wrap">
+    {!hero && (
+    <div class="hero" id="hero">
+      <img class="mark rise" src={asset('brand/mark.svg')} alt="" width="177" height="202" fetchpriority="high" />
+      <h1 class="rise">{ui.site}</h1>
+      <p class="tag-line rise">{ui.tagline}</p>
+      <SearchBox lang={lang} />
+      <div class="chips" data-home-chips>
+        {quick.map((q) => <a class={`chip t-${q}`} href={`${url(lang, 'search')}?q=${encodeURIComponent(tagLabel(q, lang))}`}>{tagLabel(q, lang)}</a>)}
+      </div>
+    </div>
+    )}
+    {hero && (
+      <div class="chips" style="margin-top:18px">
+        {quick.map((q) => <a class={`chip t-${q}`} href={`${url(lang, 'search')}?q=${encodeURIComponent(tagLabel(q, lang))}`}>{tagLabel(q, lang)}</a>)}
+      </div>
+    )}
+
+    <div data-home-rest>
+      <section id="grupe">
+        <div class="sec-head"><h2>{ui.groupsTitle}</h2><a href={url(lang, 'recipes')}>{ui.allRecipes} ({all.length})</a></div>
+        <div class="cats">
+          {CATEGORIES.map((c) => (
+            <a class="cat" href={url(lang, 'category', c.id)} style={`background:${c.tint}`}>
+              <span class="ico" aria-hidden="true">{c.icon}</span>
+              <b>{c[lang]}</b>
+              <span>{plural(count(c.id), lang)}</span>
+            </a>
+          ))}
+          <button class="cat" type="button" data-surprise style="background:var(--ink);color:var(--paper);text-align:left">
+            <span class="ico" aria-hidden="true">🎲</span>
+            <b>{ui.surprise}</b>
+            <span style="color:inherit;opacity:.75">{plural(all.length, lang)}</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="two">
+        <a class="cta" href={url(lang, 'book')}>
+          <span class="big" aria-hidden="true">📖</span>
+          <span><b>{ui.readAsBook}</b><span>{ui.bookLead}</span></span>
+          <Fragment set:html={icon('chev')} />
+        </a>
+        <a class="cta light" href={url(lang, 'recipe', 'tiramisu')}>
+          <span class="big" aria-hidden="true">▶️</span>
+          <span><b>{all.find((r) => r.slug === 'tiramisu')?.title[lang]}</b><span>{ui.videoRecipe}</span></span>
+          <Fragment set:html={icon('chev')} />
+        </a>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>{ui.featured}</h2></div>
+        <div class="grid">{featured.map((r) => <RecipeCard r={r} lang={lang} />)}</div>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { loadIndex } from '../lib/search-client';
+  import { url, type Lang } from '../lib/i18n';
+  const lang = document.body.dataset.lang as Lang;
+  // while searching on the home page, hide the rest so results are right under the bar
+  const rest = document.querySelector<HTMLElement>('[data-home-rest]');
+  const chips = document.querySelector<HTMLElement>('[data-home-chips]');
+  document.addEventListener('bk:search', (e) => {
+    const on = !!(e as CustomEvent).detail;
+    if (rest) rest.hidden = on;
+    if (chips) chips.hidden = on;
+  });
+  document.querySelector('[data-surprise]')?.addEventListener('click', async () => {
+    const rows = await loadIndex();
+    location.href = url(lang, 'recipe', rows[Math.floor(Math.random() * rows.length)].s);
+  });
+  // first visit: follow the remembered language
+  try {
+    const want = localStorage.getItem('bk:lang');
+    if (want && want !== lang && !sessionStorage.getItem('bk:lr')) { sessionStorage.setItem('bk:lr', '1'); location.replace(url(want as Lang, 'home')); }
+  } catch {}
+</script>

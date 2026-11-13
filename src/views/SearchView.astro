@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import SearchBox from '../components/SearchBox.astro';
+import { CATEGORIES, t, url, type Lang } from '../lib/i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+---
+<Base lang={lang} title={ui.search} alt={url(lang === 'sr' ? 'en' : 'sr', 'search')} active="search">
+  <div class="wrap">
+    <div class="page-head"><h1>{ui.search}</h1></div>
+    <div style="margin-top:14px"><SearchBox lang={lang} autofocus /></div>
+    <section data-search-rest>
+      <div class="sec-head"><h2>{ui.groupsTitle}</h2></div>
+      <div class="chips" style="flex-wrap:wrap;overflow:visible">
+        {CATEGORIES.map((c) => <a class="chip" href={url(lang, 'category', c.id)}><span aria-hidden="true">{c.icon}</span>{c[lang]}</a>)}
+      </div>
+    </section>
+  </div>
+</Base>
+<script>
+  const rest = document.querySelector<HTMLElement>('[data-search-rest]');
+  document.addEventListener('bk:search', (e) => { if (rest) rest.hidden = !!(e as CustomEvent).detail; });
+</script>

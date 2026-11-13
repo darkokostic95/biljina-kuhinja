@@ -1,0 +1,8 @@
+---
+import V from '../../../views/RecipeView.astro';
+import { allRecipes } from '../../../lib/recipes';
+export async function getStaticPaths() {
+  return (await allRecipes()).map((r) => ({ params: { slug: r.slug }, props: { r } }));
+}
+---
+<V lang="en" r={Astro.props.r} />

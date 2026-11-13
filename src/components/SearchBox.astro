@@ -1,0 +1,81 @@
+---
+import { t, type Lang } from '../lib/i18n';
+import { icon } from '../lib/icons';
+interface Props { lang: Lang; autofocus?: boolean; hint?: boolean }
+const { lang, autofocus = false, hint = true } = Astro.props;
+const ui = t(lang);
+---
+<div class="search-wrap" data-search data-lang={lang} data-noresults={ui.noResults} data-results={ui.results} data-result1={lang === 'sr' ? 'rezultat' : 'result'} data-recent={ui.recent} data-autofocus={autofocus ? '1' : undefined}>
+  <form class="search" role="search" action="#" autocomplete="off">
+    <Fragment set:html={icon('search', 'mag')} />
+    <label class="sr-only" for="q">{ui.search}</label>
+    <input id="q" name="q" type="search" inputmode="search" enterkeyhint="search" placeholder={ui.searchPlaceholder} autocapitalize="off" autocorrect="off" spellcheck="false" />
+    <button type="button" class="clear" aria-label="Clear"><Fragment set:html={icon('x')} /></button>
+  </form>
+  {hint && <p class="search-hint">{ui.searchHint}</p>}
+  <div class="recent" hidden></div>
+  <div class="results" aria-live="polite" hidden>
+    <p class="count"></p>
+    <div class="grid"></div>
+  </div>
+</div>
+
+<script>
+  import { loadIndex, search } from '../lib/search-client';
+  import { cardHTML } from '../lib/card-client';
+  import type { Lang } from '../lib/i18n';
+
+  const RKEY = 'bk:recent';
+  const getRecent = (): string[] => { try { return JSON.parse(localStorage.getItem(RKEY) || '[]'); } catch { return []; } };
+  const addRecent = (q: string) => {
+    q = q.trim(); if (q.length < 3) return;
+    const r = [q, ...getRecent().filter((x) => x.toLowerCase() !== q.toLowerCase())].slice(0, 6);
+    try { localStorage.setItem(RKEY, JSON.stringify(r)); } catch {}
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-search]').forEach((root) => {
+    const lang = root.dataset.lang as Lang;
+    const form = root.querySelector('form')!;
+    const input = root.querySelector('input')!;
+    const box = root.querySelector<HTMLElement>('.results')!;
+    const grid = box.querySelector<HTMLElement>('.grid')!;
+    const count = box.querySelector<HTMLElement>('.count')!;
+    const recentEl = root.querySelector<HTMLElement>('.recent')!;
+    const hint = root.querySelector<HTMLElement>('.search-hint');
+    let timer = 0;
+
+    const showRecent = () => {
+      const r = getRecent();
+      recentEl.hidden = !r.length || !!input.value;
+      recentEl.innerHTML = r.map((q) => `<button type="button" class="chip">${q.replace(/</g, '&lt;')}</button>`).join('');
+    };
+    const run = async () => {
+      const q = input.value.trim();
+      form.classList.toggle('has', !!q);
+      if (hint) hint.hidden = !!q;
+      if (!q) { box.hidden = true; showRecent(); document.dispatchEvent(new CustomEvent('bk:search', { detail: '' })); return; }
+      recentEl.hidden = true;
+      const rows = await loadIndex();
+      if (input.value.trim() !== q) return;
+      const res = search(rows, q);
+      count.textContent = res.exact ? `${res.hits.length} ${res.hits.length === 1 ? root.dataset.result1 : root.dataset.results}` : root.dataset.noresults!;
+      grid.innerHTML = res.hits.slice(0, res.exact ? 40 : 8).map((h) => cardHTML(h.row, lang)).join('');
+      box.hidden = false;
+      document.dispatchEvent(new CustomEvent('bk:search', { detail: q }));
+      const u = new URL(location.href);
+      if (root.dataset.autofocus) { u.searchParams.set('q', q); history.replaceState(null, '', u); }
+    };
+    input.addEventListener('input', () => { clearTimeout(timer); timer = window.setTimeout(run, 90); });
+    input.addEventListener('focus', () => { loadIndex(); showRecent(); }, { once: false });
+    form.addEventListener('submit', (e) => { e.preventDefault(); addRecent(input.value); input.blur(); run(); });
+    root.querySelector('.clear')!.addEventListener('click', () => { input.value = ''; run(); input.focus(); });
+    grid.addEventListener('click', () => addRecent(input.value));
+    recentEl.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest('button');
+      if (b) { input.value = b.textContent!; run(); }
+    });
+    const q0 = new URLSearchParams(location.search).get('q');
+    if (q0) { input.value = q0; run(); }
+    else if (root.dataset.autofocus) { showRecent(); if (matchMedia('(min-width: 900px)').matches) input.focus(); }
+  });
+</script>

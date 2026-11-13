@@ -1,0 +1,205 @@
+---
+import Base from '../layouts/Base.astro';
+import { CATEGORIES, t, url, asset, plural, type Lang } from '../lib/i18n';
+import { allRecipes } from '../lib/recipes';
+import { icon } from '../lib/icons';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+const all = await allRecipes();
+const count = (id: string) => all.filter((r) => r.category === id).length;
+const cats = CATEGORIES.map((c) => ({ id: c.id, name: c[lang], icon: c.icon, n: plural(count(c.id), lang) }));
+---
+<Base lang={lang} title={ui.readAsBook} description={ui.bookLead} alt={url(lang === 'sr' ? 'en' : 'sr', 'book')} active="book">
+  <div class="wrap">
+    <!-- chapter picker -->
+    <div data-picker>
+      <div class="page-head"><h1>{ui.readAsBook}</h1><p class="lead">{ui.bookLead}</p></div>
+      <div class="shelf">
+        {cats.map((c, i) => (
+          <a class="spine" href={`?g=${c.id}`} data-g={c.id} style={`--h:${i % 3}`}>
+            <span class="ico" aria-hidden="true">{c.icon}</span>
+            <b>{c.name}</b>
+            <small>{c.n}</small>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- the book -->
+    <div data-reader hidden>
+      <div class="book-bar">
+        <a class="crumb" href={url(lang, 'book')} data-back><Fragment set:html={icon('back')} /><span>{ui.book}</span></a>
+        <select data-toc aria-label={ui.bookPick}></select>
+      </div>
+      <div class="book-stage"><div class="book" data-book></div></div>
+      <div class="book-ctl">
+        <button class="btn ghost" type="button" data-prev aria-label={ui.prev}><Fragment set:html={icon('back')} /></button>
+        <span data-pos class="pos"></span>
+        <button class="btn ghost" type="button" data-next aria-label={ui.next}><Fragment set:html={icon('chev')} /></button>
+      </div>
+      <p class="muted hint">{ui.bookHint}</p>
+    </div>
+  </div>
+  <div hidden data-cfg data-cats={JSON.stringify(cats)} data-mark={asset('brand/mark.svg')} data-site={ui.site} data-ing={ui.ingredients} data-steps={ui.steps} data-open={ui.bookOpen} data-note={ui.notes} data-recipe={url(lang, 'recipe', '__S__')}></div>
+</Base>
+
+<style is:global>
+  .shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+  @media (min-width: 700px) { .shelf { grid-template-columns: repeat(4, 1fr); } }
+  .spine {
+    position: relative; min-height: 132px; padding: 14px 14px 14px 22px; border-radius: 6px 14px 14px 6px;
+    background: var(--main); color: #fff; display: flex; flex-direction: column; justify-content: flex-end;
+    box-shadow: inset 10px 0 0 #0000001f, inset 12px 0 0 #ffffff26, var(--shadow);
+  }
+  .spine[style*='--h:1'] { background: var(--ink); }
+  .spine[style*='--h:2'] { background: var(--olive); }
+  .spine .ico { position: absolute; right: 10px; top: 8px; font-size: 34px; }
+  .spine b { font-size: 18px; line-height: 1.15; letter-spacing: -0.02em; }
+  .spine small { opacity: .8; font-weight: 600; }
+
+  .book-bar { display: flex; align-items: center; gap: 10px; padding: 12px 0 10px; }
+  .book-bar .crumb { font-size: 14px; font-weight: 700; color: var(--main); display: inline-flex; align-items: center; gap: 2px; min-height: 40px; flex: none; }
+  .book-bar .crumb svg { width: 20px; height: 20px; }
+  .book-bar select {
+    flex: 1; min-width: 0; height: 44px; border-radius: 999px; border: 1.5px solid var(--ink); background: var(--paper);
+    padding: 0 14px; font: inherit; font-weight: 700; font-size: 15px; color: var(--ink);
+  }
+  .book-stage { display: grid; place-items: center; min-height: 300px; }
+  .book { margin: 0 auto; filter: drop-shadow(0 14px 22px #3b2a2030); }
+  .book .pg { background: #FFFDF8; color: var(--ink); overflow: hidden; }
+  .book .pg .in { position: absolute; inset: 0; padding: 22px 20px 34px; display: flex; flex-direction: column; }
+  .book .pg.--left .in { box-shadow: inset -18px 0 22px -18px #3b2a2040; }
+  .book .pg.--right .in { box-shadow: inset 18px 0 22px -18px #3b2a2040; }
+  .book .pg h2 { font-size: 22px; line-height: 1.12; margin: 0 0 8px; }
+  .book .pg h3 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--main); margin: 10px 0 2px; }
+  .book .pg p, .book .pg li { font-size: 14.5px; line-height: 1.42; margin: 0; }
+  .book .pg ul { list-style: none; padding: 0; margin: 0; }
+  .book .pg ul li { padding: 3px 0 3px 14px; position: relative; }
+  .book .pg ul li::before { content: ''; position: absolute; left: 2px; top: 11px; width: 5px; height: 5px; border-radius: 50%; background: var(--acc); }
+  .book .pg ol { list-style: none; padding: 0; margin: 0; }
+  .book .pg .st { padding: 4px 0; display: grid; grid-template-columns: 22px 1fr; gap: 6px; font-size: 14.5px; line-height: 1.42; }
+  .book .pg .st b { color: var(--main); }
+  .book .pg .nt { margin-top: 8px; padding: 8px 10px; background: #FBF0D8; border-radius: 8px; font-size: 13.5px; }
+  .book .pg .open { margin-top: 10px; align-self: flex-start; font-size: 13.5px; font-weight: 800; color: var(--main); min-height: 32px; display: inline-flex; align-items: center; }
+  .book .pg .num { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 11.5px; font-weight: 700; color: #A39485; }
+  .book .pg.cover { background: var(--main); color: #fff; }
+  .book .pg.cover .in { align-items: center; justify-content: center; text-align: center; box-shadow: inset 14px 0 0 #0000001a, inset 16px 0 0 #ffffff22; }
+  .book .pg.cover .badge { width: 46%; aspect-ratio: 1; border-radius: 50%; background: var(--paper); display: grid; place-items: center; margin-bottom: 16px; }
+  .book .pg.cover .badge img { width: 58%; }
+  .book .pg.cover h2 { font-size: 30px; margin-bottom: 6px; }
+  .book .pg.cover p { font-size: 16px; font-weight: 700; opacity: .9; }
+  .book .pg.end .in { align-items: center; justify-content: center; text-align: center; }
+  .book-ctl { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 14px; }
+  .book-ctl .btn { width: 56px; padding: 0; }
+  .book-ctl .pos { font-weight: 800; font-size: 15px; min-width: 76px; text-align: center; }
+  .hint { text-align: center; font-size: 13.5px; margin-top: 8px; }
+  .measure { position: absolute; visibility: hidden; left: -9999px; top: 0; }
+</style>
+
+<script>
+  import { PageFlip } from 'page-flip';
+
+  const cfg = document.querySelector<HTMLElement>('[data-cfg]')!.dataset;
+  const lang = document.body.dataset.lang!;
+  const cats: { id: string; name: string; icon: string; n: string }[] = JSON.parse(cfg.cats!);
+  const g = new URLSearchParams(location.search).get('g');
+  const cat = cats.find((c) => c.id === g);
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+  interface R { s: string; t: string; i: { g: string; l: string[] }[]; p: string[]; n: string }
+
+  if (cat) start(cat);
+
+  async function start(cat: { id: string; name: string; icon: string; n: string }) {
+    document.querySelector<HTMLElement>('[data-picker]')!.hidden = true;
+    document.querySelector<HTMLElement>('[data-reader]')!.hidden = false;
+    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+    const list: R[] = await fetch(`${base}/book-data/${lang}/${cat.id}.json`).then((r) => r.json());
+
+    // page size: one page on phones, two on wide screens
+    const stage = document.querySelector<HTMLElement>('.book-stage')!;
+    const availW = stage.clientWidth;
+    const two = availW >= 760;
+    const availH = Math.max(380, window.innerHeight - (two ? 300 : 292));
+    let w = Math.floor(two ? Math.min(460, availW / 2) : Math.min(430, availW));
+    let h = Math.floor(Math.min(availH, w * 1.5));
+    if (h < w * 1.15) w = Math.floor(h / 1.15);
+
+    // ---- split recipes into pages by measuring real text ----
+    const m = document.createElement('div');
+    m.className = 'book measure';
+    m.innerHTML = `<div class="pg" style="position:relative;width:${w}px;height:${h}px"><div class="in"></div></div>`;
+    document.body.appendChild(m);
+    const inner = m.querySelector<HTMLElement>('.in')!;
+    const maxH = h - 22 - 34; // padding top + bottom
+    const pages: { html: string; slug?: string; cls?: string }[] = [];
+    const first = new Map<string, number>();
+
+    pages.push({ cls: 'cover', html: `<div class="badge"><img src="${cfg.mark}" alt=""></div><h2>${esc(cat.name)}</h2><p>${esc(cfg.site!)} · ${esc(cat.n)}</p>` });
+
+    for (const r of list) {
+      const blocks: string[] = [`<h2>${esc(r.t)}</h2>`];
+      r.i.forEach((grp, gi) => {
+        blocks.push(`<h3>${esc(grp.g || (gi === 0 ? cfg.ing! : ''))}</h3>`);
+        grp.l.forEach((l) => blocks.push(`<ul><li>${esc(l)}</li></ul>`));
+      });
+      blocks.push(`<h3>${esc(cfg.steps!)}</h3>`);
+      r.p.forEach((s, i) => blocks.push(`<div class="st"><b>${i + 1}.</b><span>${esc(s)}</span></div>`));
+      if (r.n) blocks.push(`<p class="nt">${esc(r.n)}</p>`);
+      blocks.push(`<a class="open" href="${cfg.recipe!.replace('__S__', r.s)}">${esc(cfg.open!)} →</a>`);
+
+      first.set(r.s, pages.length);
+      let cur: string[] = [];
+      inner.innerHTML = '';
+      for (const b of blocks) {
+        inner.insertAdjacentHTML('beforeend', b);
+        const last = inner.lastElementChild as HTMLElement;
+        if (last.offsetTop + last.offsetHeight - 22 > maxH && cur.length) {
+          // never leave a heading alone at the bottom of a page
+          const carry: string[] = [];
+          while (cur.length > 1 && /^<h[23]/.test(cur[cur.length - 1])) carry.unshift(cur.pop()!);
+          pages.push({ html: cur.join(''), slug: r.s });
+          cur = carry;
+          inner.innerHTML = carry.join('') + b;
+        }
+        cur.push(b);
+      }
+      if (cur.length) pages.push({ html: cur.join(''), slug: r.s });
+    }
+    pages.push({ cls: 'end', html: `<div class="badge" style="width:34%"><img src="${cfg.mark}" alt="" style="width:100%"></div><p style="margin-top:12px;font-weight:800">${esc(cfg.site!)}</p>` });
+    m.remove();
+
+    // ---- build the book ----
+    const el = document.querySelector<HTMLElement>('[data-book]')!;
+    el.innerHTML = pages.map((p, i) => `<div class="pg ${p.cls ?? ''}" data-slug="${p.slug ?? ''}"${p.cls === 'cover' || p.cls === 'end' ? ' data-density="hard"' : ''}><div class="in">${p.html}</div>${p.cls ? '' : `<span class="num">${i}</span>`}</div>`).join('');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pf = new PageFlip(el, {
+      width: w, height: h, size: 'fixed', usePortrait: true, showCover: true,
+      maxShadowOpacity: 0.35, mobileScrollSupport: true, flippingTime: reduce ? 150 : 650,
+      swipeDistance: 20, drawShadow: !reduce, showPageCorners: !reduce,
+    } as any);
+    pf.loadFromHTML(el.querySelectorAll('.pg'));
+
+    // table of contents
+    const toc = document.querySelector<HTMLSelectElement>('[data-toc]')!;
+    toc.innerHTML = `<option value="">${esc(cat.icon + ' ' + cat.name)}</option>` + list.map((r) => `<option value="${r.s}">${esc(r.t)}</option>`).join('');
+    toc.addEventListener('change', () => { if (toc.value) pf.turnToPage(first.get(toc.value)!); else pf.turnToPage(0); });
+
+    const pos = document.querySelector<HTMLElement>('[data-pos]')!;
+    const sync = (i: number) => {
+      pos.textContent = `${i + 1} / ${pages.length}`;
+      const slug = pages[i]?.slug ?? '';
+      toc.value = slug;
+      history.replaceState(null, '', slug ? `#${slug}` : location.pathname + location.search);
+    };
+    pf.on('flip', (e: any) => sync(e.data));
+    document.querySelector('[data-prev]')!.addEventListener('click', () => pf.flipPrev());
+    document.querySelector('[data-next]')!.addEventListener('click', () => pf.flipNext());
+    document.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') pf.flipPrev(); if (e.key === 'ArrowRight') pf.flipNext(); });
+
+    const want = decodeURIComponent(location.hash.slice(1));
+    if (want && first.has(want)) { pf.turnToPage(first.get(want)!); sync(first.get(want)!); } else sync(0);
+    (window as any).__book = { pages: pages.length, w, h };
+  }
+</script>

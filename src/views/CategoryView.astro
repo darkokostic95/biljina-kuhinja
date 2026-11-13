@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import RecipeCard from '../components/RecipeCard.astro';
+import { catById, t, url, plural, tagLabel, type Lang } from '../lib/i18n';
+import { allRecipes, sortFor } from '../lib/recipes';
+import { icon } from '../lib/icons';
+interface Props { lang: Lang; category: string }
+const { lang, category } = Astro.props;
+const ui = t(lang);
+const c = catById(category);
+const list = sortFor((await allRecipes()).filter((r) => r.category === category), lang);
+const tagCount = new Map<string, number>();
+list.forEach((r) => r.tags.forEach((g) => tagCount.set(g, (tagCount.get(g) ?? 0) + 1)));
+const tags = [...tagCount.entries()].filter(([g, n]) => n >= 2 && n < list.length && g !== 'video').sort((a, b) => (a[0] === 'posno' ? -1 : b[0] === 'posno' ? 1 : b[1] - a[1])).slice(0, 8);
+---
+<Base lang={lang} title={c[lang]} description={`${c[lang]}: ${plural(list.length, lang)}. ${ui.site}.`} alt={url(lang === 'sr' ? 'en' : 'sr', 'category', category)} active="groups">
+  <div class="wrap">
+    <div class="page-head">
+      <a class="crumb" href={url(lang, 'recipes')}><Fragment set:html={icon('back')} /><span>{ui.groups}</span></a>
+      <h1><span aria-hidden="true">{c.icon}</span> {c[lang]}</h1>
+      <p class="lead" data-count data-total={plural(list.length, lang)}>{plural(list.length, lang)}</p>
+    </div>
+    {tags.length > 0 && (
+      <div class="chips" style="margin-top:10px" data-filter>
+        <button class="chip" aria-pressed="true" data-tag="">{ui.filterAll}</button>
+        {tags.map(([g, n]) => <button class={`chip t-${g}`} aria-pressed="false" data-tag={g}>{tagLabel(g, lang)} · {n}</button>)}
+      </div>
+    )}
+    <div class="grid" style="margin-top:14px" data-list>
+      {list.map((r) => <RecipeCard r={r} lang={lang} showCat={false} />)}
+    </div>
+    <section>
+      <a class="cta" href={`${url(lang, 'book')}?g=${category}`}>
+        <span class="big" aria-hidden="true">📖</span>
+        <span><b>{ui.readAsBook}</b><span>{c[lang]}</span></span>
+        <Fragment set:html={icon('chev')} />
+      </a>
+    </section>
+  </div>
+</Base>
+<script>
+  const bar = document.querySelector('[data-filter]');
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-list] .card')];
+  const count = document.querySelector<HTMLElement>('[data-count]');
+  bar?.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('button');
+    if (!b) return;
+    bar.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    const tag = b.dataset.tag!;
+    let n = 0;
+    cards.forEach((c) => { const on = !tag || c.dataset.tags!.split(' ').includes(tag); c.hidden = !on; if (on) n++; });
+    if (count) count.textContent = tag ? `${n} / ${cards.length}` : count.dataset.total!;
+  });
+</script>

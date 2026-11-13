@@ -6,3 +6,8 @@ dist/
 .astro/
 .env
 __pycache__/
+blender/out/
+design/shots/
+design/gen/
+*.blend1
+design/*.png

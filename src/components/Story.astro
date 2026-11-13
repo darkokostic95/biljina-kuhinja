@@ -1,0 +1,154 @@
+---
+// Scroll-driven hero: rendered Blender frames scrubbed by scroll, with real HTML on top.
+import { t, url, asset, type Lang } from '../lib/i18n';
+import { icon } from '../lib/icons';
+interface Props { lang: Lang; count: number; w: number; h: number; total: number }
+const { lang, count, w, h, total } = Astro.props;
+const ui = t(lang);
+const lead = lang === 'sr' ? `${total} recepata, prepisanih iz maminih svezaka` : `${total} recipes, copied from mom's notebooks`;
+const cue = lang === 'sr' ? 'Skrolujte' : 'Scroll';
+---
+<section class="story" data-story data-count={count} data-w={w} data-h={h} data-src={asset('hero/m/')}>
+  <div class="stick">
+    <img class="poster" src={asset('hero/m/0000.webp')} alt="" width={w} height={h} fetchpriority="high" />
+    <canvas aria-hidden="true"></canvas>
+    <div class="ov o1">
+      <div class="top">
+        <h1>{ui.site}</h1>
+        <p>{ui.tagline}</p>
+      </div>
+      <div class="bottom">
+        <a class="fake-search" href={url(lang, 'search')}>
+          <Fragment set:html={icon('search')} /><span>{ui.searchPlaceholder}</span>
+        </a>
+        <span class="cue">{cue}<i></i></span>
+      </div>
+    </div>
+    <div class="ov o2">
+      <div class="mid">
+        <h2>{lead}</h2>
+        <div class="row">
+          <a class="btn" href="#grupe">{ui.groupsTitle}</a>
+          <a class="btn ghost" href={url(lang, 'book')}>{ui.readAsBook}</a>
+        </div>
+      </div>
+    </div>
+    <a class="skip" href="#grupe">{ui.skip}</a>
+  </div>
+</section>
+
+<style>
+  .story { position: relative; height: 330vh; margin: 0; }
+  .stick {
+    position: sticky; top: var(--head-h); overflow: hidden; background: #DDD0B6;
+    height: calc(100vh - var(--head-h) - var(--nav-h) - env(safe-area-inset-bottom));
+    height: calc(100svh - var(--head-h) - var(--nav-h) - env(safe-area-inset-bottom));
+  }
+  @media (min-width: 900px) { .stick { height: calc(100vh - var(--head-h)); } }
+  .poster, canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  canvas { opacity: 0; }
+  .story.ready canvas { opacity: 1; }
+  .ov { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 18px 16px 16px; pointer-events: none; will-change: opacity, transform; }
+  .ov a { pointer-events: auto; }
+  .o1 { justify-content: space-between; }
+  .o1 .top { text-align: center; padding-top: 2vh; }
+  .o1 h1 { font-size: clamp(34px, 10vw, 60px); }
+  .o1 .top p { font-weight: 700; color: var(--ink-2); margin-top: 6px; }
+  .o1 .bottom { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .fake-search {
+    width: 100%; max-width: 520px; height: 56px; border-radius: 999px; border: 2px solid var(--ink); background: #fff;
+    display: flex; align-items: center; gap: 12px; padding: 0 18px; font-weight: 600; color: #8D7E73; box-shadow: 0 3px 0 var(--ink);
+  }
+  .fake-search :global(svg) { width: 22px; height: 22px; color: var(--ink); flex: none; }
+  .cue { font-size: 12.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .cue i { width: 2px; height: 22px; background: var(--ink); border-radius: 2px; animation: cue 1.4s infinite ease-in-out; transform-origin: top; }
+  @keyframes cue { 0%, 100% { transform: scaleY(.3); opacity: .4; } 50% { transform: scaleY(1); opacity: 1; } }
+  .o2 { justify-content: center; align-items: center; text-align: center; opacity: 0; }
+  .o2 .mid { background: color-mix(in srgb, var(--paper) 90%, transparent); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); padding: 22px 18px; border-radius: 22px; box-shadow: var(--shadow); max-width: 440px; }
+  .o2 h2 { font-size: clamp(24px, 6.4vw, 34px); }
+  .o2 .row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; }
+  .skip { position: absolute; right: 10px; top: 8px; font-size: 12.5px; font-weight: 700; color: var(--ink-2); padding: 8px; opacity: 0; }
+  .skip:focus { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    .story { height: auto; }
+    .stick { position: relative; top: 0; }
+    .cue { display: none; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-story]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (root && !reduce) {
+    const count = +root.dataset.count!, fw = +root.dataset.w!, fh = +root.dataset.h!, src = root.dataset.src!;
+    const stick = root.querySelector<HTMLElement>('.stick')!;
+    const cv = root.querySelector('canvas')!;
+    const ctx = cv.getContext('2d')!;
+    const o1 = root.querySelector<HTMLElement>('.o1')!, o2 = root.querySelector<HTMLElement>('.o2')!;
+    const frames: (ImageBitmap | HTMLImageElement | null)[] = new Array(count).fill(null);
+    let shown = -1, want = 0, raf = 0;
+
+    const load = async (i: number) => {
+      if (frames[i]) return;
+      try {
+        const res = await fetch(`${src}${String(i).padStart(4, '0')}.webp`);
+        const blob = await res.blob();
+        frames[i] = 'createImageBitmap' in window ? await createImageBitmap(blob) : await new Promise<HTMLImageElement>((ok) => { const im = new Image(); im.onload = () => ok(im); im.src = URL.createObjectURL(blob); });
+        if (i === 0) { root.classList.add('ready'); }
+        schedule();
+      } catch {}
+    };
+    // coarse pass first (every 4th), then the rest: usable almost immediately on mobile data
+    const order = [...Array(count).keys()].sort((a, b) => (a % 4 === 0 ? 0 : a % 2 === 0 ? 1 : 2) - (b % 4 === 0 ? 0 : b % 2 === 0 ? 1 : 2) || a - b);
+    (async () => { await load(0); let i = 1; const next = async (): Promise<void> => { while (i < order.length) { await load(order[i++]); } }; await Promise.all([next(), next(), next()]); })();
+
+    const size = () => {
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      cv.width = Math.round(stick.clientWidth * dpr);
+      cv.height = Math.round(stick.clientHeight * dpr);
+      shown = -1; schedule();
+    };
+    const nearest = (i: number) => { for (let d = 0; d < count; d++) { if (frames[i - d]) return i - d; if (frames[i + d]) return i + d; } return -1; };
+    const draw = () => {
+      raf = 0;
+      const i = nearest(want);
+      if (i < 0 || i === shown) return;
+      const im = frames[i]!;
+      const cw = cv.width, ch = cv.height;
+      const wide = cw / ch > 0.9;                       // desktop: show the whole frame height
+      const s = wide ? ch / fh : Math.max(cw / fw, ch / fh);
+      const dw = fw * s, dh = fh * s;
+      if (wide) {                                       // fill the sides with a soft, stretched copy
+        ctx.filter = 'blur(40px) brightness(.96)';
+        const s2 = Math.max(cw / fw, ch / fh) * 1.1;
+        ctx.drawImage(im as any, (cw - fw * s2) / 2, (ch - fh * s2) / 2, fw * s2, fh * s2);
+        ctx.filter = 'none';
+      }
+      ctx.drawImage(im as any, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+      shown = i;
+    };
+    const schedule = () => { if (!raf) raf = requestAnimationFrame(draw); };
+    const clamp = (v: number) => Math.max(0, Math.min(1, v));
+    const onScroll = () => {
+      const r = root.getBoundingClientRect();
+      const span = r.height - stick.clientHeight;
+      const p = clamp((-r.top + parseFloat(getComputedStyle(stick).top)) / span);
+      want = Math.round(p * (count - 1));
+      const a = 1 - clamp((p - 0.06) / 0.2);
+      o1.style.opacity = String(a);
+      o1.style.transform = `translateY(${(1 - a) * -24}px)`;
+      o1.style.visibility = a <= 0 ? 'hidden' : 'visible';
+      const b = clamp((p - 0.62) / 0.2);
+      o2.style.opacity = String(b);
+      o2.style.transform = `translateY(${(1 - b) * 24}px)`;
+      o2.style.visibility = b <= 0 ? 'hidden' : 'visible';
+      schedule();
+    };
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', size);
+    size(); onScroll();
+    // ?story=0.8 jumps to that point of the animation (used for checking it)
+    const jump = parseFloat(new URLSearchParams(location.search).get('story') || '');
+    if (!isNaN(jump)) requestAnimationFrame(() => scrollTo(0, root.offsetTop + (root.offsetHeight - stick.clientHeight) * jump));
+  }
+</script>

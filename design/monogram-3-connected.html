@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biljina Kuhinja — spojeni BK</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#ebe4d8; color:#3B2A20; font-family:"Bricolage Grotesque", sans-serif; }
+  h1 { font-size:32px; font-weight:800; text-align:center; margin:22px 0 2px; letter-spacing:-.5px; }
+  p.lead { text-align:center; margin:0 0 18px; opacity:.7; }
+  .grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; max-width:1280px; margin:0 auto; padding:0 16px 28px; }
+  .v { background:#FFFBF5; border-radius:16px; padding:14px; box-shadow:0 8px 24px #3b2a2012; }
+  .v svg.main { width:100%; height:auto; display:block; border-radius:12px; }
+  .small { display:flex; align-items:center; gap:10px; margin-top:10px; }
+  .small .tile { width:52px; height:52px; border-radius:13px; overflow:hidden; flex:none; }
+  .small svg { width:100%; height:100%; display:block; }
+  .small .fav { width:28px; height:28px; flex:none; }
+  .v h2 { font-size:16px; font-weight:800; margin:10px 0 2px; }
+  .v p { font-size:13px; margin:0; opacity:.78; line-height:1.38; }
+  @media (max-width:1000px) { .grid { grid-template-columns:repeat(2, 1fr); } }
+  @media (max-width:560px) { .grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<h1>Spojeni B i K · oklagija i hleb</h1>
+<p class="lead">Slova se preklapaju, dele istu crtu ili stoje na istoj podlozi, pa čine jedan znak. Ispod svake: ikonica za telefon i favikon.</p>
+<div class="grid" id="g"></div>
+<script>
+const BASE = { crust:"#E7B27A", bg2:"#F6EFE4", paper:"#FFFBF5", ink:"#3B2A20", main:"#C0643B", acc:"#E0A53C", steel:"#E9E4DC", white:"#FFFFFF", olive:"#7A8450", bg:"#F6EFE4" };
+const FONT = "Bricolage Grotesque";
+
+// p = palette for this drawing; sw = outline width (0 = flat, no outlines)
+function parts(p, sw = 5) {
+  const S = sw ? `stroke="${p.ink}" stroke-width="${sw}" stroke-linejoin="round"` : "";
+  const det = sw ? p.ink : p.detail;           // colour for inner details
+  return {
+    hatB: () => `
+      <path d="M52 26 C66 10 98 16 96 42 C116 50 110 94 74 98 L52 98 Z" fill="${p.white}" ${S}/>
+      <path d="M52 98 C86 88 116 100 108 124 C128 136 120 180 82 178 L52 178 Z" fill="${p.white}" ${S}/>
+      <path d="M56 50 C66 52 74 58 80 66 M56 130 C68 132 80 140 88 150" fill="none" stroke="${det}" stroke-width="3.5" stroke-linecap="round" opacity=".35"/>
+      <rect x="22" y="22" width="32" height="160" rx="9" fill="${p.main}" ${S}/>
+      <path d="M38 36 V168" stroke="${p.white}" stroke-width="2.5" stroke-dasharray="6 7" stroke-linecap="round" opacity=".6"/>`,
+    spoonStem: () => `
+      <g fill="${p.acc}" ${S}><ellipse cx="151" cy="42" rx="16" ry="25"/><rect x="145" y="64" width="13" height="118" rx="6.5"/></g>
+      <ellipse cx="151" cy="42" rx="8" ry="14" fill="${p.ink}" opacity=".13"/>`,
+    pinStem: () => `
+      <g fill="${p.acc}" ${S}><rect x="145" y="10" width="13" height="24" rx="6.5"/><rect x="145" y="168" width="13" height="24" rx="6.5"/>
+      <rect x="138" y="30" width="27" height="142" rx="10"/></g>
+      <path d="M146 44 V158" stroke="${p.white}" stroke-width="3" stroke-linecap="round" opacity=".5"/>`,
+    whisk: (x = 160, y = 110, r = 33, len = 1) => `
+      <g transform="translate(${x} ${y}) rotate(${r}) scale(${len})">
+        <path d="M0 -36 C-22 -62 -18 -100 0 -106 C18 -100 22 -62 0 -36 Z" fill="${p.white}" ${S}/>
+        <path d="M0 -36 C-9 -62 -8 -98 0 -106 C8 -98 9 -62 0 -36 M-15 -70 H15" fill="none" stroke="${det}" stroke-width="3.5" opacity="${sw ? 1 : .5}"/>
+        <rect x="-6" y="-40" width="12" height="40" rx="6" fill="${p.main}" ${S}/>
+      </g>`,
+    spatula: (x = 160, y = 116, r = 139, len = 1) => `
+      <g transform="translate(${x} ${y}) rotate(${r}) scale(${len})">
+        <rect x="-6" y="-42" width="12" height="42" rx="6" fill="${p.main}" ${S}/>
+        <rect x="-15" y="-86" width="30" height="46" rx="8" fill="${p.steel}" ${S}/>
+        <path d="M-5 -78 V-50 M5 -78 V-50" stroke="${det}" stroke-width="3.5" stroke-linecap="round" opacity="${sw ? 1 : .5}"/>
+      </g>`,
+
+    pinB: (o = {}) => {
+      const crust = o.crust ?? p.crust, seg = o.kifla;
+      const score = seg
+        ? `<path d="M64 36 C70 52 70 80 64 96 M80 34 C88 52 88 82 80 98 M64 106 C72 126 72 150 64 168 M84 104 C94 126 94 152 84 170" fill="none" stroke="${det}" stroke-width="3.5" stroke-linecap="round" opacity=".4"/>`
+        : o.heart ? `<path transform="translate(80 136) scale(1.5)" d="M0 6 C-10 -2 -10 -12 -4 -12 C-1 -12 0 -9 0 -8 C0 -9 1 -12 4 -12 C10 -12 10 -2 0 6 Z" fill="none" stroke="${det}" stroke-width="2.4" opacity=".55"/><path d="M64 48 L76 60 M78 42 L90 56" fill="none" stroke="${det}" stroke-width="3.5" stroke-linecap="round" opacity=".45"/>`
+        : `<path d="M64 48 L76 60 M78 42 L90 56 M66 120 L80 134 M82 114 L96 130 M70 146 L80 156" fill="none" stroke="${det}" stroke-width="3.5" stroke-linecap="round" opacity=".45"/>`;
+      const top = seg ? "M50 30 C84 22 106 40 100 64 C98 88 82 100 50 100 Z" : "M50 30 C90 26 106 46 102 66 C100 90 80 100 50 100 Z";
+      return `
+      <path d="${top}" fill="${crust}" ${S}/>
+      <path d="M50 102 C98 98 120 118 112 142 C106 166 86 172 50 170 Z" fill="${crust}" ${S}/>${score}
+      <g fill="${p.acc}" ${S}><rect x="31" y="10" width="14" height="26" rx="7"/><rect x="31" y="164" width="14" height="26" rx="7"/>
+      <rect x="24" y="30" width="28" height="140" rx="10"/></g>
+      <path d="M33 44 V156" stroke="${p.white}" stroke-width="3" stroke-linecap="round" opacity=".5"/>`; },
+    wheat: (x, y, r, len = 1) => {
+      let g = "";
+      for (let i = 0; i < 5; i++) { const yy = -52 - i * 11;
+        g += `<ellipse cx="-6" cy="${yy}" rx="4.5" ry="8.5" transform="rotate(-28 -6 ${yy})" fill="${p.acc}" ${S.replace(/stroke-width="[^"]+"/, `stroke-width="${sw ? 3 : 0}"`)}/>
+              <ellipse cx="6" cy="${yy - 5}" rx="4.5" ry="8.5" transform="rotate(28 6 ${yy - 5})" fill="${p.acc}" ${S.replace(/stroke-width="[^"]+"/, `stroke-width="${sw ? 3 : 0}"`)}/>`; }
+      g += `<ellipse cx="0" cy="-112" rx="4.5" ry="9" fill="${p.acc}" ${S.replace(/stroke-width="[^"]+"/, `stroke-width="${sw ? 3 : 0}"`)}/>`;
+      return `<g transform="translate(${x} ${y}) rotate(${r}) scale(${len})"><path d="M0 0 V-104" stroke="${sw ? p.ink : p.acc}" stroke-width="5" stroke-linecap="round"/>${g}</g>`; },
+    flour: (pts) => pts.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${p.white}" stroke="${p.ink}" stroke-width="1.5" opacity=".9"/>`).join(""),
+
+    board: () => `
+      <path d="M4 176 H214 Q232 176 232 186 Q232 196 214 196 H4 Q-6 196 -6 186 Q-6 176 4 176 Z" fill="${p.acc}" ${S}/>
+      <circle cx="218" cy="186" r="4" fill="${p.bg}" ${S.replace(/stroke-width="[^"]+"/, 'stroke-width="3"')}/>
+      <path d="M14 186 H190" stroke="${p.white}" stroke-width="2.5" stroke-linecap="round" opacity=".45"/>`,
+    dough: () => `
+      <path d="M-4 184 C10 170 60 174 110 172 C160 170 210 168 232 178 C240 190 222 198 200 196 C150 200 80 202 20 198 C2 197 -10 192 -4 184 Z" fill="#F6E2C4" ${S}/>`,
+    steam: (x, y) => `<path d="M${x} ${y} c-8 -8 6 -14 -2 -24 M${x+16} ${y-4} c-8 -8 6 -14 -2 -24" fill="none" stroke="${p.acc}" stroke-width="4.5" stroke-linecap="round"/>`,
+    heart: (x, y, s = 1, c = p.main) => `<path transform="translate(${x} ${y}) scale(${s})" d="M0 6 C-10 -2 -10 -12 -4 -12 C-1 -12 0 -9 0 -8 C0 -9 1 -12 4 -12 C10 -12 10 -2 0 6 Z" fill="${c}"/>`,
+  };
+}
+const flatTile = { ...BASE, crust:"#F0C99B", ink:BASE.main, white:BASE.paper, main:BASE.ink, acc:BASE.acc, steel:"#F3E3D6", detail:BASE.main };
+
+// each variant draws inside viewBox "0 0 240 200"
+const K = (k, dx, arms) => `<g transform="translate(${dx} 0)">${arms}${k.spoonStem()}</g>`;
+const V = [
+  { n:"S1 · Preklopljeno", d:"Varjača (K) stoji preko ivice hleba (B). Slova se dodiruju i čitaju kao jedan znak.",
+    bg:BASE.bg,
+    art:(p=BASE, sw=4.5) => { const k = parts(p, sw); return `<g transform="translate(18 0)">${k.pinB()}${K(k, -34, k.whisk() + k.spatula())}</g>`; } },
+
+  { n:"S2 · Preklopljeno, sa pšenicom", d:"Isto preklapanje, a kose crte slova K su klasovi pšenice.",
+    bg:BASE.bg,
+    art:(p=BASE, sw=4.5) => { const k = parts(p, sw); return `<g transform="translate(18 0)">${k.pinB()}${K(k, -34, k.wheat(158, 108, 36) + k.wheat(158, 116, 142, .82))}</g>`; } },
+
+  { n:"S3 · Iz struka slova B", d:"K nema svoju uspravnu crtu: klasovi rastu pravo iz „struka“ slova B, između dve vekne. Prava ligatura.",
+    bg:BASE.bg,
+    art:(p=BASE, sw=4.5) => { const k = parts(p, sw); return `<g transform="translate(30 0)">${k.wheat(106, 98, 40, 1.05)}${k.wheat(108, 104, 138, .95)}${k.pinB()}</g>`; } },
+
+  { n:"S4 · Kroz slovo B", d:"Mutilica i lopatica izlaze iza hleba, kao da su provučene kroz B. Najčvršće spojeno.",
+    bg:BASE.bg,
+    art:(p=BASE, sw=4.5) => { const k = parts(p, sw); return `<g transform="translate(14 0)">${k.whisk(110, 116, 38, 1.25)}${k.spatula(110, 108, 136, 1.2)}${k.pinB()}<g transform="translate(-24 0)">${k.spoonStem()}</g></g>`; } },
+
+  { n:"S5 · Na dasci", d:"B i K stoje zajedno na dasci za sečenje. Daska ih spaja kao potpis.",
+    bg:BASE.bg,
+    art:(p=BASE, sw=4.5) => { const k = parts(p, sw); return `${k.board()}<g transform="translate(14 -10) scale(.94)">${k.pinB()}${K(k, -26, k.whisk() + k.spatula())}</g>`; } },
+
+  { n:"S6 · Razvučeno testo", d:"Ispod slova je razvučeno testo sa malo brašna, kao da je oklagija (B) upravo razvukla podlogu za K.",
+    bg:BASE.bg,
+    art:(p=BASE, sw=4.5) => { const k = parts(p, sw); return `${k.dough()}${k.flour([[60,186,2.5],[150,184,3],[196,188,2]])}<g transform="translate(14 -12) scale(.94)">${k.pinB()}${K(k, -30, k.wheat(158, 108, 36) + k.wheat(158, 116, 142, .82))}</g>`; } },
+
+  { n:"S7 · Srce i brašno, spojeno", d:"Preklopljeno kao S1, sa srcem urezanim u hleb i brašnom okolo.",
+    bg:BASE.bg,
+    art:(p=BASE, sw=4.5) => { const k = parts(p, sw); return `${k.flour([[10,96,2.5],[16,120,3],[214,40,2.5],[206,186,3]])}<g transform="translate(18 0)">${k.pinB({heart:true})}${K(k, -34, k.whisk() + k.spatula())}</g>`; } },
+
+  { n:"S8 · Ravno, spojeno (ikonica)", d:"S2 bez kontura na terakoti. Ovako bi izgledala ikonica na telefonu.",
+    bg:BASE.main, flat:true,
+    art:(p=flatTile, sw=0) => { const k = parts(p, sw); return `<g transform="translate(18 0)">${k.pinB()}${K(k, -34, k.wheat(158, 108, 36) + k.wheat(158, 116, 142, .82))}</g>`; } },
+];
+
+function main(v) {
+  if (v.badge) return `<svg class="main" viewBox="0 0 260 260"><rect width="260" height="260" fill="${BASE.bg}"/>
+    <defs><path id="tb" d="M40 130 A90 90 0 0 1 220 130"/><path id="bb" d="M28 130 A102 102 0 0 0 232 130"/></defs>
+    <circle cx="130" cy="130" r="118" fill="${BASE.paper}" stroke="${BASE.ink}" stroke-width="5"/>
+    <circle cx="130" cy="130" r="108" fill="none" stroke="${BASE.ink}" stroke-width="2" stroke-dasharray="1 7" stroke-linecap="round"/>
+    <text font-family="${FONT}" font-weight="800" font-size="19" letter-spacing="4" fill="${BASE.ink}"><textPath href="#tb" startOffset="50%" text-anchor="middle">BILJINA KUHINJA</textPath></text>
+    <text font-family="${FONT}" font-weight="700" font-size="14" letter-spacing="4" fill="${BASE.main}"><textPath href="#bb" startOffset="50%" text-anchor="middle">DOMAĆI RECEPTI</textPath></text>
+    <circle cx="24" cy="130" r="4" fill="${BASE.acc}"/><circle cx="236" cy="130" r="4" fill="${BASE.acc}"/>
+    <g transform="translate(66 74) scale(.54)">${v.art()}</g></svg>`;
+  return `<svg class="main" viewBox="-20 -14 280 260"><rect x="-20" y="-14" width="280" height="260" fill="${v.bg}"/>
+    <g transform="translate(0 4)">${v.art()}</g>
+    <text x="120" y="232" text-anchor="middle" font-family="${FONT}" font-weight="800" font-size="30" letter-spacing="-1" fill="${v.flat ? BASE.paper : BASE.ink}">Biljina Kuhinja</text></svg>`;
+}
+const tile = (v) => {
+  const p = v.flat ? flatTile : BASE;
+  return `<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="${v.flat ? BASE.main : BASE.bg}"/><g transform="translate(8 11) scale(.36)">${v.art(p, v.flat ? 0 : 6)}</g></svg>`;
+};
+const fav = (v) => v.flat ? `<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="${BASE.main}"/><g transform="translate(8 11) scale(.36)">${v.art(flatTile, 0)}</g></svg>` : `<svg viewBox="10 4 222 194">${v.art(BASE, 7)}</svg>`;
+
+document.getElementById('g').innerHTML = V.map(v => `
+  <div class="v">${main(v)}
+    <h2>${v.n}</h2><p>${v.d}</p>
+    <div class="small"><div class="tile">${tile(v)}</div><div class="fav">${fav(v)}</div></div>
+  </div>`).join('');
+</script>
+</body>
+</html>

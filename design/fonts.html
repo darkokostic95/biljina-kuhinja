@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biljina Kuhinja — fontovi</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito+Sans:wght@400;700;800&family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;700&family=DM+Serif+Display&family=DM+Sans:wght@400;700&family=Lora:wght@600;700&family=Lato:wght@400;700&family=Young+Serif&family=Instrument+Sans:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#F6EFE4; --paper:#FFFBF5; --ink:#3B2A20; --main:#C0643B; --acc:#E0A53C; --soft:#EED9C4; --olive:#7A8450; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#ebe4d8; color:var(--ink); font-family:"Nunito Sans", sans-serif; }
+  h1 { font-family:Fraunces, serif; font-size:36px; text-align:center; margin:22px 0 2px; }
+  p.lead { text-align:center; margin:0 0 18px; opacity:.7; }
+  .grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; max-width:1240px; margin:0 auto; padding:0 16px 28px; }
+  .opt { border-radius:16px; overflow:hidden; background:#fff; box-shadow:0 8px 24px #3b2a2012; }
+  .site { background:var(--bg); padding:14px; background-image:linear-gradient(#3B2A2010 1px, transparent 1px), linear-gradient(90deg, #3B2A2010 1px, transparent 1px); background-size:18px 18px; }
+  .bar { display:flex; align-items:center; gap:8px; }
+  .bar svg { width:46px; height:46px; flex:none; }
+  .bar b { font-family:var(--h); font-weight:var(--hw); font-size:25px; color:var(--ink); letter-spacing:var(--ls, 0); }
+  .card { margin-top:12px; background:var(--paper); border-radius:12px; padding:12px 14px; border:1px solid #0001; font-family:var(--b); }
+  .chip { display:inline-block; background:var(--soft); font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; }
+  .card h3 { font-family:var(--h); font-weight:var(--hw); font-size:26px; line-height:1.1; margin:8px 0 6px; }
+  .card ul { margin:0 0 8px; padding-left:18px; font-size:14px; line-height:1.5; }
+  .card p { margin:0 0 10px; font-size:14px; line-height:1.5; }
+  .btn { display:inline-block; background:var(--main); color:#fff; font-weight:700; font-size:13px; padding:7px 14px; border-radius:999px; }
+  .meta { padding:12px 14px 16px; }
+  .meta h2 { margin:0 0 2px; font-size:17px; }
+  .meta p { margin:0; font-size:13px; opacity:.75; }
+  @media (max-width:900px) { .grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<h1>Biljina Kuhinja — izaberi font</h1>
+<p class="lead">Paleta B · Seoska kuhinja. Prvi font je za naslove, drugi za tekst recepta.</p>
+<div class="grid" id="g"></div>
+<script>
+const F = [
+  { n:"1 · Fraunces + Nunito Sans", d:"Mekan, topao serif sa zaobljenim ivicama. Kao korica stare kuvarice, a moderno. Moja preporuka.",
+    h:"Fraunces", hw:700, b:"'Nunito Sans'" },
+  { n:"2 · Playfair Display + Source Sans 3", d:"Klasičan, otmen, kao kuvar iz knjižare ili časopis o hrani.",
+    h:"'Playfair Display'", hw:700, b:"'Source Sans 3'" },
+  { n:"3 · DM Serif Display + DM Sans", d:"Jak, krupan naslov i vrlo čitljiv tekst. Dobar kontrast na telefonu.",
+    h:"'DM Serif Display'", hw:400, b:"'DM Sans'" },
+  { n:"4 · Lora + Lato", d:"Najviše „knjiški“: miran, lak za dugo čitanje. Lepo bi izgledao u prikazu knjige.",
+    h:"Lora", hw:700, b:"Lato" },
+  { n:"5 · Young Serif + Instrument Sans", d:"Prijatan, malo staromodan serif, kao etiketa na tegli.",
+    h:"'Young Serif'", hw:400, b:"'Instrument Sans'" },
+  { n:"6 · Bricolage Grotesque", d:"Bez serifa, moderno i razigrano. Jedan font za sve.",
+    h:"'Bricolage Grotesque'", hw:800, b:"'Bricolage Grotesque'", ls:"-0.5px" },
+];
+const hat = (f) => `<svg viewBox="40 30 130 140"><path d="M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z" fill="#fff" stroke="#3B2A20" stroke-width="9" stroke-linejoin="round"/><rect x="58" y="118" width="88" height="46" rx="8" fill="#C0643B" stroke="#3B2A20" stroke-width="9"/><text x="102" y="154" text-anchor="middle" font-family="${f.h.replace(/'/g,'')}" font-weight="${f.hw}" font-size="34" fill="#fff">BK</text></svg>`;
+document.getElementById('g').innerHTML = F.map(f => `
+  <div class="opt" style="--h:${f.h};--hw:${f.hw};--b:${f.b};--ls:${f.ls||0}">
+    <div class="site">
+      <div class="bar">${hat(f)}<b>Biljina Kuhinja</b></div>
+      <div class="card">
+        <span class="chip">Torte</span>
+        <h3>Šuškavac bez oraha</h3>
+        <ul><li>8 belanaca</li><li>550 g šećera</li><li>1 kašika sirćeta</li></ul>
+        <p>Skuvati fil od mleka, žumanaca, pudinga, gustina i šećera.</p>
+        <span class="btn">Otvori recept</span>
+      </div>
+    </div>
+    <div class="meta"><h2>${f.n}</h2><p>${f.d}</p></div>
+  </div>`).join('');
+</script>
+</body>
+</html>

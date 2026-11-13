@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biljina Kuhinja — palete</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#efece6; color:#222; font-family:Nunito, sans-serif; }
+  h1 { font-family:Caveat, cursive; font-size:42px; text-align:center; margin:22px 0 2px; color:#333; }
+  p.lead { text-align:center; margin:0 0 18px; color:#666; }
+  .grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; max-width:1240px; margin:0 auto; padding:0 16px 28px; }
+  .pal { border-radius:16px; overflow:hidden; background:#fff; box-shadow:0 8px 24px #0001; }
+  .site { background:var(--bg); padding:14px; background-image:linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size:18px 18px; }
+  .bar { display:flex; align-items:center; gap:8px; }
+  .bar svg { width:46px; height:46px; }
+  .bar b { font-family:Caveat; font-size:28px; color:var(--ink); }
+  .search { margin:10px 0; background:#fff; border:2px solid var(--ink); border-radius:999px; padding:7px 14px; font-size:13px; color:#888; }
+  .card { background:var(--paper); border-radius:12px; padding:12px; border:1px solid #0001; }
+  .chip { display:inline-block; background:var(--soft); color:var(--ink); font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px; }
+  .card h3 { font-family:Caveat; font-size:28px; margin:6px 0 2px; color:var(--ink); }
+  .card ul { margin:4px 0 10px; padding-left:18px; font-size:13px; color:#444; }
+  .btn { display:inline-block; background:var(--main); color:#fff; font-weight:800; font-size:13px; padding:7px 14px; border-radius:999px; }
+  .btn2 { display:inline-block; color:var(--ink); font-weight:800; font-size:13px; padding:7px 10px; }
+  .meta { padding:12px 14px 14px; }
+  .meta h2 { margin:0 0 2px; font-size:17px; }
+  .meta p { margin:0 0 10px; font-size:13px; color:#666; }
+  .sw { display:flex; gap:6px; }
+  .sw div { flex:1; height:30px; border-radius:6px; border:1px solid #0001; position:relative; }
+  .sw span { display:block; font-size:10px; color:#777; text-align:center; margin-top:3px; }
+  @media (max-width:900px) { .grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<h1>Biljina Kuhinja — izaberi boje</h1>
+<p class="lead">Isti logo i ista kartica recepta u 6 paleta.</p>
+<div class="grid" id="g"></div>
+<script>
+const P = [
+  { n:"A · Mamina sveska", d:"Plavo mastilo, crvena, žuta i zelena na krem papiru. Kao njena sveska: veselo i šareno.",
+    bg:"#FBF6EC", paper:"#FFFFFF", ink:"#2B3A67", main:"#D9483B", acc:"#F2C14E", soft:"#F6E3B4", line:"#2B3A6714", extra:"#5B8C5A" },
+  { n:"B · Seoska kuhinja", d:"Terakota, maslina i med na lanenoj boji. Topla, zemljana, kao zemljani lonac i drvena daska.",
+    bg:"#F6EFE4", paper:"#FFFBF5", ink:"#3B2A20", main:"#C0643B", acc:"#E0A53C", soft:"#EED9C4", line:"#3B2A2012", extra:"#7A8450" },
+  { n:"C · Šljiva i med", d:"Tamna šljiva i med. Elegantnije, kao slavska trpeza i džem od šljiva.",
+    bg:"#FAF4EE", paper:"#FFFFFF", ink:"#4A2C40", main:"#8E3B5E", acc:"#E8A93A", soft:"#F1DCE5", line:"#4A2C4012", extra:"#9AAE8C" },
+  { n:"D · Plavi porcelan", d:"Kobalt plava i bela, kao stari tanjiri i šolje sa plavim šarama. Čisto i sveže.",
+    bg:"#F5F7FB", paper:"#FFFFFF", ink:"#142B55", main:"#1F4E9A", acc:"#C8372D", soft:"#DCE6F5", line:"#1F4E9A14", extra:"#E9B949" },
+  { n:"E · Maslina i limun", d:"Tamnozelena, žalfija i limun. Lagano i prirodno, kao bašta.",
+    bg:"#FAF8F0", paper:"#FFFFFF", ink:"#2F4A3A", main:"#3F7A57", acc:"#EBC94A", soft:"#E1ECD9", line:"#2F4A3A12", extra:"#E07A5F" },
+  { n:"F · Paprika", d:"Crvena paprika, pečena narandžasta i peršun. Jako i apetitno, kao ajvar i zimnica.",
+    bg:"#FFF7EE", paper:"#FFFFFF", ink:"#2A2A2A", main:"#B5302A", acc:"#E2733B", soft:"#F7DCCB", line:"#2A2A2A10", extra:"#4E7D4A" },
+];
+const hat = (p) => `<svg viewBox="40 30 130 140"><path d="M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z" fill="#fff" stroke="${p.ink}" stroke-width="9" stroke-linejoin="round"/><rect x="58" y="118" width="88" height="46" rx="8" fill="${p.main}" stroke="${p.ink}" stroke-width="9"/><text x="102" y="156" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="46" fill="#fff">BK</text></svg>`;
+document.getElementById('g').innerHTML = P.map(p => `
+  <div class="pal" style="--bg:${p.bg};--paper:${p.paper};--ink:${p.ink};--main:${p.main};--acc:${p.acc};--soft:${p.soft};--line:${p.line}">
+    <div class="site">
+      <div class="bar">${hat(p)}<b>Biljina Kuhinja</b></div>
+      <div class="search">🔍 Šta danas kuvamo?</div>
+      <div class="card">
+        <span class="chip">Torte</span> <span class="chip" style="background:${p.acc}55">orasi</span>
+        <h3>Reforma torta</h3>
+        <ul><li>5 belanaca</li><li>5 kašika šećera</li><li>150 g oraha</li></ul>
+        <span class="btn">Otvori recept</span><span class="btn2">Podeli ↗</span>
+      </div>
+    </div>
+    <div class="meta">
+      <h2>${p.n}</h2><p>${p.d}</p>
+      <div class="sw">${[p.bg,p.ink,p.main,p.acc,p.extra].map(c=>`<div style="background:${c}"><span style="position:absolute;top:32px;left:0;right:0">${c}</span></div>`).join('')}</div>
+      <div style="height:16px"></div>
+    </div>
+  </div>`).join('');
+</script>
+</body>
+</html>

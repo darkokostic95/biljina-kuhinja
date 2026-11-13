@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import { t, url, type Lang } from '../lib/i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+---
+<Base lang={lang} title={ui.favorites} alt={url(lang === 'sr' ? 'en' : 'sr', 'favorites')} active="favorites">
+  <div class="wrap">
+    <div class="page-head"><h1>{ui.favorites}</h1></div>
+    <p class="muted" data-empty style="margin-top:14px" hidden>{ui.noFavs}</p>
+    <div class="grid" style="margin-top:14px" data-favs></div>
+    <section data-empty-cta hidden><a class="btn" href={url(lang, 'recipes')}>{ui.allRecipes}</a></section>
+  </div>
+</Base>
+<script>
+  import { loadIndex, favs } from '../lib/search-client';
+  import { cardHTML } from '../lib/card-client';
+  import type { Lang } from '../lib/i18n';
+  const lang = document.body.dataset.lang as Lang;
+  const list = favs();
+  const grid = document.querySelector<HTMLElement>('[data-favs]')!;
+  const show = (sel: string) => (document.querySelector<HTMLElement>(sel)!.hidden = false);
+  if (!list.length) { show('[data-empty]'); show('[data-empty-cta]'); }
+  else loadIndex().then((rows) => {
+    const by = new Map(rows.map((r) => [r.s, r]));
+    grid.innerHTML = list.map((s) => by.get(s)).filter(Boolean).map((r) => cardHTML(r!, lang)).join('');
+  });
+</script>

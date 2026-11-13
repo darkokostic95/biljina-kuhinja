@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biljina Kuhinja — logo varijante</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#F6EFE4; --paper:#FFFBF5; --ink:#3B2A20; --main:#C0643B; --acc:#E0A53C; --soft:#EED9C4; --olive:#7A8450; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#ebe4d8; color:var(--ink); font-family:"Bricolage Grotesque", sans-serif; }
+  h1 { font-size:34px; font-weight:800; text-align:center; margin:22px 0 2px; letter-spacing:-.5px; }
+  p.lead { text-align:center; margin:0 0 18px; opacity:.7; }
+  .grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; max-width:1260px; margin:0 auto; padding:0 16px 28px; }
+  .v { background:var(--paper); border-radius:16px; padding:16px 14px 14px; box-shadow:0 8px 24px #3b2a2012; text-align:center; }
+  .v svg.main { width:100%; height:auto; display:block; }
+  .v h2 { font-size:16px; font-weight:800; margin:10px 0 2px; }
+  .v p { font-size:13px; margin:0; opacity:.75; line-height:1.35; min-height:36px; }
+  .small { display:flex; justify-content:center; align-items:center; gap:12px; margin-top:12px; }
+  .small svg { width:32px; height:32px; }
+  .small .app { width:54px; height:54px; border-radius:13px; overflow:hidden; }
+  .small .app svg { width:54px; height:54px; }
+  @media (max-width:1000px) { .grid { grid-template-columns:repeat(2, 1fr); } }
+  @media (max-width:560px) { .grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<h1>Biljina Kuhinja — logo, 8 varijanti</h1>
+<p class="lead">Paleta B · font Bricolage Grotesque. Ispod svake: favikon i ikonica za telefon.</p>
+<div class="grid" id="g"></div>
+<script>
+const C = { bg:"#F6EFE4", paper:"#FFFBF5", ink:"#3B2A20", main:"#C0643B", acc:"#E0A53C", soft:"#EED9C4", olive:"#7A8450" };
+const FONT = "Bricolage Grotesque";
+const PUFF = "M62 122 C30 124 24 80 56 76 C56 46 92 36 104 56 C118 36 156 44 152 78 C182 82 176 124 138 122 Z";
+// hat centred at (x,y); o = options
+function hat(x, y, s, o = {}) {
+  const fill = o.fill ?? "#fff", stroke = o.stroke ?? C.ink, band = o.band ?? C.main, sw = o.sw ?? 8;
+  const st = stroke === "none" ? "" : `stroke="${stroke}" stroke-width="${sw}" stroke-linejoin="round"`;
+  const pleats = o.pleats === false ? "" : `<path d="M84 120 C80 104 82 92 88 84 M104 120 V 76 M124 120 C128 104 126 92 120 84" fill="none" stroke="${o.pleatColor ?? stroke}" stroke-width="${sw*0.55}" stroke-linecap="round" opacity=".4"/>`;
+  const txt = o.text === false ? "" : `<text x="102" y="${o.ty ?? 154}" text-anchor="middle" font-family="${FONT}" font-weight="800" font-size="${o.fs ?? 36}" letter-spacing="-1" fill="${o.textColor ?? C.paper}">${o.text ?? "BK"}</text>`;
+  return `<g transform="translate(${x} ${y}) rotate(${o.rot ?? 0}) scale(${s}) translate(-102 -102)">
+    <path d="${PUFF}" fill="${fill}" ${st}/>${pleats}
+    <rect x="58" y="118" width="88" height="${o.bh ?? 46}" rx="8" fill="${band}" ${st}/>${txt}</g>`;
+}
+const word = (x, y, size, color = C.ink, anchor = "middle", w = 800) =>
+  `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="${FONT}" font-weight="${w}" font-size="${size}" letter-spacing="-1" fill="${color}">Biljina Kuhinja</text>`;
+const tile = (inner, bg = C.main) => `<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="${bg}"/>${inner}</svg>`;
+
+const V = [
+  { n:"1 · Kapa sa BK", d:"Kapa, a na traci inicijali. Jasno i prepoznatljivo.",
+    main:`${hat(150,104,1.15)}${word(150,236,38)}`,
+    fav:`<svg viewBox="22 30 160 140">${hat(102,100,1,{sw:11,pleats:false,fs:40})}</svg>`,
+    app: tile(hat(50,52,.5,{fill:C.paper,stroke:"none",band:C.ink,pleats:false,fs:40})) },
+
+  { n:"2 · Pečat", d:"Okrugla etiketa kao na tegli zimnice. Lepo za deljenje na mrežama.",
+    main:`<defs><path id="t2" d="M62 140 A88 88 0 0 1 238 140"/><path id="b2" d="M48 140 A102 102 0 0 0 252 140"/></defs>
+      <circle cx="150" cy="140" r="118" fill="${C.paper}" stroke="${C.ink}" stroke-width="6"/>
+      <circle cx="150" cy="140" r="108" fill="none" stroke="${C.ink}" stroke-width="2" stroke-dasharray="1 7" stroke-linecap="round"/>
+      <circle cx="150" cy="140" r="70" fill="${C.main}"/>
+      <text font-family="${FONT}" font-weight="800" font-size="21" letter-spacing="4" fill="${C.ink}"><textPath href="#t2" startOffset="50%" text-anchor="middle">BILJINA KUHINJA</textPath></text>
+      <text font-family="${FONT}" font-weight="700" font-size="15" letter-spacing="4" fill="${C.ink}"><textPath href="#b2" startOffset="50%" text-anchor="middle">DOMAĆI RECEPTI</textPath></text>
+      <circle cx="44" cy="140" r="4.5" fill="${C.acc}"/><circle cx="256" cy="140" r="4.5" fill="${C.acc}"/>
+      ${hat(150,142,.58,{fill:C.paper,stroke:"none",band:C.paper,pleatColor:C.main,textColor:C.main,fs:40})}`,
+    fav:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="${C.main}"/>${hat(50,52,.48,{fill:C.paper,stroke:"none",band:C.paper,pleats:false,textColor:C.main,fs:42})}</svg>`,
+    app: tile(`<circle cx="50" cy="50" r="40" fill="${C.main}" stroke="${C.paper}" stroke-width="3"/>` + hat(50,52,.4,{fill:C.paper,stroke:"none",band:C.paper,pleats:false,textColor:C.main,fs:42}), C.ink) },
+
+  { n:"3 · Vodoravni", d:"Kapa levo, ime desno u dva reda. Najbolje za vrh sajta na telefonu.",
+    main:`${hat(72,132,.8)}
+      <text x="142" y="128" font-family="${FONT}" font-weight="800" font-size="42" letter-spacing="-1.5" fill="${C.ink}">Biljina</text>
+      <text x="142" y="170" font-family="${FONT}" font-weight="800" font-size="42" letter-spacing="-1.5" fill="${C.main}">Kuhinja</text>`,
+    fav:`<svg viewBox="22 30 160 140">${hat(102,100,1,{sw:11,pleats:false,fs:40})}</svg>`,
+    app: tile(hat(50,52,.5,{fill:C.paper,stroke:"none",band:C.acc,pleats:false,textColor:C.ink,fs:40}), C.ink) },
+
+  { n:"4 · Lonac i para", d:"Para iz lonca ima oblik kuvarske kape. BK na loncu.",
+    main:`<g transform="translate(150 98) scale(.9) translate(-104 -86)"><path d="${PUFF}" fill="#fff" stroke="${C.ink}" stroke-width="7" stroke-linejoin="round"/></g>
+      <rect x="84" y="132" width="132" height="12" rx="6" fill="${C.ink}"/>
+      <path d="M92 144 H208 V176 Q208 204 180 204 H120 Q92 204 92 176 Z" fill="${C.main}" stroke="${C.ink}" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M92 156 H74 M208 156 H226" stroke="${C.ink}" stroke-width="9" stroke-linecap="round"/>
+      <text x="150" y="187" text-anchor="middle" font-family="${FONT}" font-weight="800" font-size="34" letter-spacing="-1" fill="${C.paper}">BK</text>
+      ${word(150,248,36)}`,
+    fav:`<svg viewBox="0 0 100 100"><rect x="18" y="38" width="64" height="7" rx="3.5" fill="${C.ink}"/><path d="M22 45 H78 V66 Q78 82 62 82 H38 Q22 82 22 66 Z" fill="${C.main}" stroke="${C.ink}" stroke-width="5"/><text x="50" y="74" text-anchor="middle" font-family="${FONT}" font-weight="800" font-size="25" fill="${C.paper}">BK</text><path d="M34 30 C28 24 36 20 32 12 M50 28 C44 22 52 18 48 10 M66 30 C60 24 68 20 64 12" fill="none" stroke="${C.acc}" stroke-width="5" stroke-linecap="round"/></svg>`,
+    app: tile(`<rect x="20" y="40" width="60" height="6" rx="3" fill="${C.paper}"/><path d="M24 46 H76 V64 Q76 78 62 78 H38 Q24 78 24 64 Z" fill="${C.paper}"/><text x="50" y="72" text-anchor="middle" font-family="${FONT}" font-weight="800" font-size="22" fill="${C.main}">BK</text><path d="M36 32 C31 27 38 23 34 16 M50 30 C45 25 52 21 48 14 M64 32 C59 27 66 23 62 16" fill="none" stroke="${C.acc}" stroke-width="4.5" stroke-linecap="round"/>`) },
+
+  { n:"5 · „bk“ sa kapom", d:"Mala slova bk, kapica sedi na slovu b. Moderno i razigrano.",
+    main:`<text x="150" y="190" text-anchor="middle" font-family="${FONT}" font-weight="800" font-size="168" letter-spacing="-8" fill="${C.ink}">b<tspan fill="${C.main}">k</tspan></text>
+      ${hat(98,52,.5,{rot:-12,text:false,bh:24,sw:12})}
+      ${word(150,244,34)}`,
+    fav:`<svg viewBox="0 0 100 100"><text x="50" y="88" text-anchor="middle" font-family="${FONT}" font-weight="800" font-size="86" letter-spacing="-5" fill="${C.ink}">b<tspan fill="${C.main}">k</tspan></text></svg>`,
+    app: tile(`<text x="50" y="82" text-anchor="middle" font-family="${FONT}" font-weight="800" font-size="74" letter-spacing="-4" fill="${C.paper}">b<tspan fill="${C.acc}">k</tspan></text>`, C.main) },
+
+  { n:"6 · Kašika kao K", d:"Kapa na slovu B, drvena kašika je uspravna crta slova K.",
+    main:`<text x="58" y="186" font-family="${FONT}" font-weight="800" font-size="150" fill="${C.ink}">B</text>
+      ${hat(98,58,.46,{rot:-14,text:false,bh:24,sw:13})}
+      <ellipse cx="184" cy="84" rx="15" ry="22" fill="${C.acc}" stroke="${C.ink}" stroke-width="6"/>
+      <rect x="178" y="104" width="12" height="82" rx="6" fill="${C.acc}" stroke="${C.ink}" stroke-width="6"/>
+      <path d="M194 146 L236 100 M196 144 L238 186" stroke="${C.main}" stroke-width="16" stroke-linecap="round"/>
+      ${word(150,244,34)}`,
+    fav:`<svg viewBox="40 60 210 140"><text x="58" y="186" font-family="${FONT}" font-weight="800" font-size="150" fill="${C.ink}">B</text><ellipse cx="184" cy="84" rx="15" ry="22" fill="${C.acc}" stroke="${C.ink}" stroke-width="8"/><rect x="178" y="104" width="12" height="82" rx="6" fill="${C.acc}" stroke="${C.ink}" stroke-width="8"/><path d="M194 146 L236 100 M196 144 L238 186" stroke="${C.main}" stroke-width="20" stroke-linecap="round"/></svg>`,
+    app: tile(`<g transform="translate(-6 3) scale(.38)"><text x="58" y="186" font-family="${FONT}" font-weight="800" font-size="150" fill="${C.paper}">B</text><ellipse cx="184" cy="84" rx="15" ry="22" fill="${C.acc}"/><rect x="178" y="104" width="12" height="82" rx="6" fill="${C.acc}"/><path d="M194 146 L236 100 M196 144 L238 186" stroke="${C.paper}" stroke-width="18" stroke-linecap="round"/></g>`, C.ink) },
+
+  { n:"7 · Pločica", d:"Kvadrat u terakoti sa belom kapom. Isti znak svuda: sajt, ikonica, Instagram.",
+    main:`<rect x="92" y="22" width="116" height="116" rx="28" fill="${C.main}"/>
+      ${hat(150,82,.62,{fill:C.paper,stroke:"none",band:C.ink,pleatColor:C.main,fs:40})}
+      ${word(150,196,38)}
+      <text x="150" y="226" text-anchor="middle" font-family="${FONT}" font-weight="600" font-size="15" letter-spacing="5" fill="${C.olive}">DOMAĆI RECEPTI</text>`,
+    fav:`<svg viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="${C.main}"/>${hat(50,52,.5,{fill:C.paper,stroke:"none",band:C.ink,pleats:false,fs:40})}</svg>`,
+    app: tile(hat(50,52,.5,{fill:C.paper,stroke:"none",band:C.ink,pleats:false,fs:40})) },
+
+  { n:"8 · Luk sa grančicama", d:"Ime u luku iznad kape, sa maslinovim grančicama. Kao natpis nad domaćom pekarom.",
+    main:`<defs><path id="a8" d="M44 168 A106 106 0 0 1 256 168"/></defs>
+      <text font-family="${FONT}" font-weight="800" font-size="30" letter-spacing="1" fill="${C.ink}"><textPath href="#a8" startOffset="50%" text-anchor="middle">BILJINA KUHINJA</textPath></text>
+      ${hat(150,150,.78)}
+      <g fill="${C.olive}">
+        <path d="M78 214 Q112 230 150 222 Q112 216 78 214 Z" opacity=".0"/>
+        <path d="M70 200 Q104 226 146 220" fill="none" stroke="${C.olive}" stroke-width="4" stroke-linecap="round"/>
+        <path d="M230 200 Q196 226 154 220" fill="none" stroke="${C.olive}" stroke-width="4" stroke-linecap="round"/>
+        <ellipse cx="88" cy="208" rx="9" ry="4.5" transform="rotate(30 88 208)"/><ellipse cx="106" cy="216" rx="9" ry="4.5" transform="rotate(20 106 216)"/><ellipse cx="124" cy="220" rx="9" ry="4.5" transform="rotate(8 124 220)"/>
+        <ellipse cx="212" cy="208" rx="9" ry="4.5" transform="rotate(-30 212 208)"/><ellipse cx="194" cy="216" rx="9" ry="4.5" transform="rotate(-20 194 216)"/><ellipse cx="176" cy="220" rx="9" ry="4.5" transform="rotate(-8 176 220)"/>
+      </g>
+      <text x="150" y="252" text-anchor="middle" font-family="${FONT}" font-weight="600" font-size="14" letter-spacing="5" fill="${C.main}">DOMAĆI RECEPTI</text>`,
+    fav:`<svg viewBox="22 30 160 140">${hat(102,100,1,{sw:11,pleats:false,fs:40})}</svg>`,
+    app: tile(hat(50,50,.5,{fill:C.paper,stroke:"none",band:C.main,pleats:false,fs:40}) + `<path d="M22 84 Q36 92 48 90 M78 84 Q64 92 52 90" fill="none" stroke="${C.acc}" stroke-width="3" stroke-linecap="round"/>`, C.olive) },
+];
+
+document.getElementById('g').innerHTML = V.map(v => `
+  <div class="v">
+    <svg class="main" viewBox="0 0 300 264">${v.main}</svg>
+    <h2>${v.n}</h2><p>${v.d}</p>
+    <div class="small">${v.fav}<div class="app">${v.app}</div></div>
+  </div>`).join('');
+</script>
+</body>
+</html>
