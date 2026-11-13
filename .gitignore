@@ -1,0 +1,8 @@
+.DS_Store
+recipies/
+work/
+node_modules/
+dist/
+.astro/
+.env
+__pycache__/
