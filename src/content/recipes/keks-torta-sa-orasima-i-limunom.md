@@ -8,8 +8,6 @@ tags:
 - keks
 - orasi
 - bez-pecenja
-sources:
-- IMG_5683
 ingredients:
 - group:
     sr: Sastojci

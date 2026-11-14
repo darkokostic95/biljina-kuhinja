@@ -9,9 +9,6 @@ tags:
 - orasi
 - lesnik
 - praznicno
-sources:
-- IMG_5567
-- IMG_5679
 ingredients:
 - group:
     sr: Kora

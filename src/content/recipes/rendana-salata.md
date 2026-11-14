@@ -7,8 +7,6 @@ category: salate-predjela
 tags:
 - sir
 - brzo
-sources:
-- IMG_5654
 ingredients:
 - group:
     sr: Sastojci

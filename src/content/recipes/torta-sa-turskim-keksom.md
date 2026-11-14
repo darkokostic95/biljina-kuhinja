@@ -10,8 +10,6 @@ tags:
 - plazma
 - orasi
 - bez-pecenja
-sources:
-- IMG_5567
 ingredients:
 - group:
     sr: I fil

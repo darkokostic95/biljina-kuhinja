@@ -6,8 +6,6 @@ title:
 category: kolaci
 tags:
 - kvasac
-sources:
-- IMG_5593
 ingredients:
 - group:
     sr: Testo

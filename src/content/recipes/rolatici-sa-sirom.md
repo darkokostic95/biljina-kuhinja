@@ -7,8 +7,6 @@ category: peciva
 tags:
 - kvasac
 - sir
-sources:
-- IMG_5594
 ingredients:
 - group:
     sr: Sastojci

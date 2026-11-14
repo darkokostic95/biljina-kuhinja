@@ -8,8 +8,6 @@ tags:
 - bez-pecenja
 - kokos
 - keks
-sources:
-- IMG_5595
 ingredients:
 - group:
     sr: Sastojci

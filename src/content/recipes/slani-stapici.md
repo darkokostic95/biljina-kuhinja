@@ -7,8 +7,6 @@ category: peciva
 tags:
 - susam
 - posno
-sources:
-- IMG_5671
 ingredients:
 - group:
     sr: Sastojci

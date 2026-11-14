@@ -7,8 +7,6 @@ category: glavna-jela
 tags:
 - posno
 - povrce
-sources:
-- IMG_5642
 ingredients:
 - group:
     sr: Nadev

@@ -13,9 +13,6 @@ aliases:
   en:
   - cornbread
   - corn bread
-sources:
-- IMG_5610
-- IMG_5669
 ingredients:
 - group:
     sr: Sastojci

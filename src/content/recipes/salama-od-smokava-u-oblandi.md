@@ -9,8 +9,6 @@ tags:
 - oblanda
 - orasi
 - voce
-sources:
-- IMG_5724
 ingredients:
 - group:
     sr: Sastojci

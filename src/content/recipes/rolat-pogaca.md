@@ -7,8 +7,6 @@ category: peciva
 tags:
 - kvasac
 - susam
-sources:
-- IMG_5673
 ingredients:
 - group:
     sr: Sastojci

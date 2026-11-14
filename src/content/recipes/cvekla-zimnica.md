@@ -6,8 +6,6 @@ title:
 category: zimnica
 tags:
 - povrce
-sources:
-- IMG_5635
 ingredients:
 - group:
     sr: Rastvor

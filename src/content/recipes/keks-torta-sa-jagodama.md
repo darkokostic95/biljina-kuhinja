@@ -9,8 +9,6 @@ tags:
 - jagode
 - voce
 - bez-pecenja
-sources:
-- IMG_5550
 ingredients:
 - group:
     sr: Podloga

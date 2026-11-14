@@ -11,8 +11,6 @@ aliases:
   - francuska salata
   en:
   - olivier salad
-sources:
-- IMG_5618
 ingredients:
 - group:
     sr: Sastojci

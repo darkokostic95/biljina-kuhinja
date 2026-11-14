@@ -20,7 +20,6 @@ aliases:
   - coffee cake
 video: GQC9kjZxR4g
 video_credit: Pekar Pekarica
-sources: []
 ingredients:
 - group:
     sr: Krem

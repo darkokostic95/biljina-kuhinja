@@ -7,10 +7,6 @@ category: torte
 tags:
 - cokolada
 - orasi
-sources:
-- IMG_5693
-- IMG_5694
-- IMG_5547
 ingredients:
 - group:
     sr: Čokoladni fil

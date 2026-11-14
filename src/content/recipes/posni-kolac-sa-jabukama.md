@@ -8,8 +8,6 @@ tags:
 - posno
 - jabuke
 - brzo
-sources:
-- IMG_5571
 ingredients:
 - group:
     sr: Sastojci

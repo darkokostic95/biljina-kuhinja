@@ -7,8 +7,6 @@ category: torte
 tags:
 - keks
 - bez-pecenja
-sources:
-- IMG_5560
 ingredients:
 - group:
     sr: Sastojci

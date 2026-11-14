@@ -7,8 +7,6 @@ category: pite
 tags:
 - sir
 - kvasac
-sources:
-- IMG_5613
 ingredients:
 - group:
     sr: Preliv

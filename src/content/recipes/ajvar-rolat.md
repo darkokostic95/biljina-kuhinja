@@ -6,8 +6,6 @@ title:
 category: salate-predjela
 tags:
 - sir
-sources:
-- IMG_5584
 ingredients:
 - group:
     sr: Kora

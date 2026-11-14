@@ -7,8 +7,6 @@ category: salate-predjela
 tags:
 - posno
 - povrce
-sources:
-- IMG_5640
 ingredients:
 - group:
     sr: Posni majonez

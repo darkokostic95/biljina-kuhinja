@@ -13,9 +13,6 @@ aliases:
   - testenina
   en:
   - pasta
-sources:
-- IMG_5628
-- IMG_5629
 ingredients:
 - group:
     sr: Sastojci

@@ -14,8 +14,6 @@ aliases:
   en:
   - burek
   - meat pie
-sources:
-- IMG_5661
 ingredients:
 - group:
     sr: Premaz

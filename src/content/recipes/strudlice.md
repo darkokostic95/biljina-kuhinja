@@ -8,8 +8,6 @@ tags:
 - kvasac
 - orasi
 - cokolada
-sources:
-- IMG_5543
 ingredients:
 - group:
     sr: Testo

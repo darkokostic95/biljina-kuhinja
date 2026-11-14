@@ -7,9 +7,6 @@ category: glavna-jela
 tags:
 - meso
 - praznicno
-sources:
-- IMG_5636
-- IMG_5637
 ingredients:
 - group:
     sr: Sastojci

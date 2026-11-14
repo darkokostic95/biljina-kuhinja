@@ -8,9 +8,6 @@ tags:
 - kvasac
 - meso
 - sir
-sources:
-- IMG_5677
-- IMG_5678
 ingredients:
 - group:
     sr: Testo

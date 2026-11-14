@@ -7,8 +7,6 @@ category: kolaci
 tags:
 - kokos
 - cokolada
-sources:
-- IMG_5572
 ingredients:
 - group:
     sr: Testo

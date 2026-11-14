@@ -6,9 +6,6 @@ title:
 category: pite
 tags:
 - kvasac
-sources:
-- IMG_5663
-- IMG_5662
 ingredients:
 - group:
     sr: Sastojci

@@ -13,8 +13,6 @@ aliases:
   en:
   - crepes
   - pancakes
-sources:
-- IMG_5675
 ingredients:
 - group:
     sr: Palačinke

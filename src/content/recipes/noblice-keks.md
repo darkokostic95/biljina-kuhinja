@@ -14,9 +14,6 @@ aliases:
   en:
   - cookies
   - sandwich cookies
-sources:
-- IMG_5609
-- IMG_5696
 ingredients:
 - group:
     sr: Testo

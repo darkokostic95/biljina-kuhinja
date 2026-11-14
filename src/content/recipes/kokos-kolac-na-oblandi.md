@@ -8,9 +8,6 @@ tags:
 - kokos
 - oblanda
 - cokolada
-sources:
-- IMG_5711
-- IMG_5712
 ingredients:
 - group:
     sr: Kora

@@ -6,9 +6,6 @@ title:
 category: pite
 tags:
 - sir
-sources:
-- IMG_5611
-- IMG_5674
 ingredients:
 - group:
     sr: Sastojci

@@ -9,8 +9,6 @@ tags:
 - orasi
 - cokolada
 - posno
-sources:
-- IMG_5699
 ingredients:
 - group:
     sr: Sastojci

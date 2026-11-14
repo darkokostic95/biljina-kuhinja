@@ -8,8 +8,6 @@ tags:
 - orasi
 - keks
 - cokolada
-sources:
-- IMG_5698
 ingredients:
 - group:
     sr: Patišpanj

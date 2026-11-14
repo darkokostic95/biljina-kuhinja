@@ -6,8 +6,6 @@ title:
 category: kolaci
 tags:
 - kokos
-sources:
-- IMG_5718
 ingredients:
 - group:
     sr: Kora

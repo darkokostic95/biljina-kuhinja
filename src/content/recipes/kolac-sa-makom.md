@@ -9,8 +9,6 @@ tags:
 - cokolada
 - posno
 - brzo
-sources:
-- IMG_5686
 ingredients:
 - group:
     sr: Sastojci

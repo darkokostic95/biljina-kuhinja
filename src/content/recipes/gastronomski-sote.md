@@ -6,8 +6,6 @@ title:
 category: glavna-jela
 tags:
 - meso
-sources:
-- IMG_5620
 ingredients:
 - group:
     sr: Sastojci

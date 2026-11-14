@@ -7,9 +7,6 @@ category: salate-predjela
 tags:
 - meso
 - sir
-sources:
-- IMG_5648
-- IMG_5649
 ingredients:
 - group:
     sr: Kora

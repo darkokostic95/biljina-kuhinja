@@ -6,8 +6,6 @@ title:
 category: sitni-kolaci
 tags:
 - brzo
-sources:
-- IMG_5700
 ingredients:
 - group:
     sr: Sastojci

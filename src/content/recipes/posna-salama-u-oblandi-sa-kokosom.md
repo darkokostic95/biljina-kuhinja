@@ -11,8 +11,6 @@ tags:
 - keks
 - kokos
 - orasi
-sources:
-- IMG_5710
 ingredients:
 - group:
     sr: I fil (braon)

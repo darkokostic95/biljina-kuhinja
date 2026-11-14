@@ -14,9 +14,6 @@ aliases:
   en:
   - cream puffs
   - profiteroles
-sources:
-- IMG_5613
-- IMG_5693
 ingredients:
 - group:
     sr: Testo

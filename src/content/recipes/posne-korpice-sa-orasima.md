@@ -10,8 +10,6 @@ tags:
 - orasi
 - keks
 - cokolada
-sources:
-- IMG_5720
 ingredients:
 - group:
     sr: Sastojci

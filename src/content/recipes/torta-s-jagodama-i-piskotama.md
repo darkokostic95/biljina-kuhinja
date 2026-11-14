@@ -9,8 +9,6 @@ tags:
 - voce
 - keks
 - bez-pecenja
-sources:
-- IMG_5683
 ingredients:
 - group:
     sr: Sastojci

@@ -6,8 +6,6 @@ title:
 category: pite
 tags:
 - brzo
-sources:
-- IMG_5653
 ingredients:
 - group:
     sr: Sastojci

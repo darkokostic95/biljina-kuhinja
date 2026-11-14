@@ -12,8 +12,6 @@ aliases:
   - salata od testenine
   en:
   - pasta salad
-sources:
-- IMG_5676
 ingredients:
 - group:
     sr: Sastojci

@@ -11,8 +11,6 @@ tags:
 - orasi
 - cokolada
 - voce
-sources:
-- IMG_5600
 ingredients:
 - group:
     sr: Sastojci

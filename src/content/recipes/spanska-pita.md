@@ -8,9 +8,6 @@ tags:
 - meso
 - sir
 - brzo
-sources:
-- IMG_5644
-- IMG_5673
 ingredients:
 - group:
     sr: Sastojci

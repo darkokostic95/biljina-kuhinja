@@ -9,8 +9,6 @@ tags:
 - bez-pecenja
 - keks
 - cokolada
-sources:
-- IMG_5710
 ingredients:
 - group:
     sr: Sastojci

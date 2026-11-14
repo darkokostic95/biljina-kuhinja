@@ -7,8 +7,6 @@ category: torte
 tags:
 - cokolada
 - orasi
-sources:
-- IMG_5562
 ingredients:
 - group:
     sr: Patišpanj

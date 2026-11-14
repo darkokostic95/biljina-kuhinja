@@ -8,8 +8,6 @@ tags:
 - kvasac
 - sir
 - praznicno
-sources:
-- IMG_5603
 ingredients:
 - group:
     sr: Sastojci

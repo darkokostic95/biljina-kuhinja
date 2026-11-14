@@ -7,8 +7,6 @@ category: peciva
 tags:
 - kvasac
 - plazma
-sources:
-- IMG_5576
 ingredients:
 - group:
     sr: Testo

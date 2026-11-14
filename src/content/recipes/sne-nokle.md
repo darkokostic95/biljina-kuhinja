@@ -11,8 +11,6 @@ aliases:
   en:
   - floating islands
   - snow eggs
-sources:
-- IMG_5668
 ingredients:
 - group:
     sr: Sastojci

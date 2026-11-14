@@ -8,8 +8,6 @@ tags:
 - orasi
 - lesnik
 - cokolada
-sources:
-- IMG_5563
 ingredients:
 - group:
     sr: Kore (×3)

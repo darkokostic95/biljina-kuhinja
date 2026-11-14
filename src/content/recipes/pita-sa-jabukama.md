@@ -12,8 +12,6 @@ aliases:
   - štrudla sa jabukama
   en:
   - apple strudel
-sources:
-- IMG_5615
 ingredients:
 - group:
     sr: Sastojci

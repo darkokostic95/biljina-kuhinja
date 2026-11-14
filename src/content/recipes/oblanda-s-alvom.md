@@ -14,8 +14,6 @@ aliases:
   en:
   - halva
   - halvah
-sources:
-- IMG_5703
 ingredients:
 - group:
     sr: Sastojci

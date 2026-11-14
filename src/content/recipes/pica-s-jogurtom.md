@@ -12,8 +12,6 @@ aliases:
   - pizza
   en:
   - pizza
-sources:
-- IMG_5643
 ingredients:
 - group:
     sr: Sastojci

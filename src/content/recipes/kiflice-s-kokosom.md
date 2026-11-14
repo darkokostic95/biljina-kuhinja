@@ -6,8 +6,6 @@ title:
 category: sitni-kolaci
 tags:
 - kokos
-sources:
-- IMG_5695
 ingredients:
 - group:
     sr: Sastojci

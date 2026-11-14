@@ -8,8 +8,6 @@ tags:
 - kvasac
 - sir
 - susam
-sources:
-- IMG_5649
 ingredients:
 - group:
     sr: Sastojci

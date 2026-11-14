@@ -6,8 +6,6 @@ title:
 category: kolaci
 tags:
 - cokolada
-sources:
-- IMG_5589
 ingredients:
 - group:
     sr: Testo

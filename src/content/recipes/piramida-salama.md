@@ -15,8 +15,6 @@ aliases:
   - posna salama
   en:
   - chocolate salami
-sources:
-- IMG_5590
 ingredients:
 - group:
     sr: Sastojci

@@ -6,8 +6,6 @@ title:
 category: salate-predjela
 tags:
 - brzo
-sources:
-- IMG_5629
 ingredients:
 - group:
     sr: Sastojci

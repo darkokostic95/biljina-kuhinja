@@ -8,8 +8,6 @@ tags:
 - voce
 - jagode
 - banane
-sources:
-- IMG_5704
 ingredients:
 - group:
     sr: Sastojci

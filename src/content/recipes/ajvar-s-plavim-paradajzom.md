@@ -12,8 +12,6 @@ aliases:
   en:
   - eggplant ajvar
   - aubergine
-sources:
-- IMG_5586
 ingredients:
 - group:
     sr: Sastojci

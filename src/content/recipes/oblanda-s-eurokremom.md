@@ -10,9 +10,6 @@ tags:
 - cokolada
 - orasi
 - kokos
-sources:
-- IMG_5705
-- IMG_5704
 ingredients:
 - group:
     sr: Sastojci

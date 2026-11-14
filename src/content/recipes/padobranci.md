@@ -6,8 +6,6 @@ title:
 category: sitni-kolaci
 tags:
 - orasi
-sources:
-- IMG_5715
 ingredients:
 - group:
     sr: Sastojci

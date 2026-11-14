@@ -8,9 +8,6 @@ tags:
 - banane
 - cokolada
 - bez-pecenja
-sources:
-- IMG_5691
-- IMG_5692
 ingredients:
 - group:
     sr: Sastojci

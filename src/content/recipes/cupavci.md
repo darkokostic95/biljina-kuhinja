@@ -15,8 +15,6 @@ aliases:
   en:
   - lamingtons
   - coconut squares
-sources:
-- IMG_5719
 ingredients:
 - group:
     sr: Testo

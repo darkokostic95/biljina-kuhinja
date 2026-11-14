@@ -8,8 +8,6 @@ tags:
 - bez-pecenja
 - kokos
 - brzo
-sources:
-- IMG_5713
 ingredients:
 - group:
     sr: Sastojci

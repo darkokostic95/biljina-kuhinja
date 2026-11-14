@@ -7,9 +7,6 @@ category: kolaci
 tags:
 - orasi
 - cokolada
-sources:
-- IMG_5701
-- IMG_5702
 ingredients:
 - group:
     sr: Kora

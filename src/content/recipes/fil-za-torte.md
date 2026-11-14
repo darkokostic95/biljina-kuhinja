@@ -6,8 +6,6 @@ title:
 category: kremovi-sladoledi
 tags:
 - brzo
-sources:
-- IMG_5700
 ingredients:
 - group:
     sr: Sastojci

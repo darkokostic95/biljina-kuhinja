@@ -8,8 +8,6 @@ tags:
 - kokos
 - cokolada
 - praznicno
-sources:
-- IMG_5695
 ingredients:
 - group:
     sr: Kora

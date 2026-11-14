@@ -8,8 +8,6 @@ tags:
 - bez-pecenja
 - kikiriki
 - keks
-sources:
-- IMG_5714
 ingredients:
 - group:
     sr: Sastojci

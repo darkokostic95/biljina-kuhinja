@@ -7,8 +7,6 @@ category: kremovi-sladoledi
 tags:
 - bez-pecenja
 - brzo
-sources:
-- IMG_5566
 ingredients:
 - group:
     sr: Sastojci

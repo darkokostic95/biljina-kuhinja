@@ -14,8 +14,6 @@ aliases:
   en:
   - bread dough
   - doughnut dough
-sources:
-- IMG_5657
 ingredients:
 - group:
     sr: Sastojci

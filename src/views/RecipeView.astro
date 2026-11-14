@@ -53,7 +53,7 @@ const jsonld = {
           <>
             {(r.ingredients.length > 1 || g.group[lang]) && <h3>{g.group[lang]}</h3>}
             <ul class="ing">
-              {g[lang].map((line, i) => <li><label><input type="checkbox" data-k={`${gi}-${i}`} /><span>{line}</span></label></li>)}
+              {g[lang].map((line) => <li>{line}</li>)}
             </ul>
           </>
         ))}
@@ -110,18 +110,6 @@ const jsonld = {
   };
   cook.addEventListener('click', () => setCook(cook.getAttribute('aria-pressed') !== 'true'));
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && cook.getAttribute('aria-pressed') === 'true') setCook(true); });
-
-  // remember ticked ingredients for this visit
-  const key = 'bk:ing:' + slug;
-  let ticked: string[] = [];
-  try { ticked = JSON.parse(sessionStorage.getItem(key) || '[]'); } catch {}
-  root.querySelectorAll<HTMLInputElement>('.ing input').forEach((cb) => {
-    cb.checked = ticked.includes(cb.dataset.k!);
-    cb.addEventListener('change', () => {
-      ticked = [...root.querySelectorAll<HTMLInputElement>('.ing input:checked')].map((x) => x.dataset.k!);
-      try { sessionStorage.setItem(key, JSON.stringify(ticked)); } catch {}
-    });
-  });
 
   // video: load YouTube only when tapped
   root.querySelector<HTMLElement>('[data-video]')?.addEventListener('click', (e) => {

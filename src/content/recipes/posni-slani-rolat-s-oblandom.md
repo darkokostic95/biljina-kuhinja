@@ -7,9 +7,6 @@ category: salate-predjela
 tags:
 - posno
 - oblanda
-sources:
-- IMG_5675
-- IMG_5676
 ingredients:
 - group:
     sr: Sastojci

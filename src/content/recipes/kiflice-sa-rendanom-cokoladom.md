@@ -7,8 +7,6 @@ category: peciva
 tags:
 - kvasac
 - cokolada
-sources:
-- IMG_5570
 ingredients:
 - group:
     sr: Sastojci

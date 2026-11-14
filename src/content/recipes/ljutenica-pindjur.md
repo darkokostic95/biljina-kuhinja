@@ -13,8 +13,6 @@ aliases:
   en:
   - pindjur
   - tomato pepper relish
-sources:
-- IMG_5585
 ingredients:
 - group:
     sr: Sastojci

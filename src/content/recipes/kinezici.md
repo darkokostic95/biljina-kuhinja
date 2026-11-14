@@ -7,8 +7,6 @@ category: glavna-jela
 tags:
 - meso
 - brzo
-sources:
-- IMG_5624
 ingredients:
 - group:
     sr: Sastojci

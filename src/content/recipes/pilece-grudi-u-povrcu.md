@@ -7,8 +7,6 @@ category: glavna-jela
 tags:
 - piletina
 - povrce
-sources:
-- IMG_5629
 ingredients:
 - group:
     sr: Sastojci

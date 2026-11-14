@@ -7,8 +7,6 @@ category: torte
 tags:
 - cokolada
 - bez-pecenja
-sources:
-- IMG_5551
 ingredients:
 - group:
     sr: Sastojci

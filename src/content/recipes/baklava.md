@@ -12,9 +12,6 @@ aliases:
   - baklava sa orasima
   en:
   - walnut baklava
-sources:
-- IMG_5719
-- IMG_5720
 ingredients:
 - group:
     sr: Sastojci

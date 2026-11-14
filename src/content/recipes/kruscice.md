@@ -6,8 +6,6 @@ title:
 category: sitni-kolaci
 tags:
 - praznicno
-sources:
-- IMG_5592
 ingredients:
 - group:
     sr: Testo

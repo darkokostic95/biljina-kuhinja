@@ -7,8 +7,6 @@ category: salate-predjela
 tags:
 - sir
 - kikiriki
-sources:
-- IMG_5602
 ingredients:
 - group:
     sr: Kora

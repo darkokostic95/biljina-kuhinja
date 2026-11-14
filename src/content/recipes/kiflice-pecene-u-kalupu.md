@@ -8,8 +8,6 @@ tags:
 - orasi
 - cokolada
 - praznicno
-sources:
-- IMG_5719
 ingredients:
 - group:
     sr: Sastojci

@@ -7,8 +7,6 @@ category: torte
 tags:
 - plazma
 - bez-pecenja
-sources:
-- IMG_5684
 ingredients:
 - group:
     sr: Sastojci

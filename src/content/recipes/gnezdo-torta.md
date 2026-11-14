@@ -6,8 +6,6 @@ title:
 category: torte
 tags:
 - orasi
-sources:
-- IMG_5717
 ingredients:
 - group:
     sr: Kora

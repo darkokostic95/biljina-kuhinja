@@ -15,8 +15,6 @@ aliases:
   - gerbo
   en:
   - gerbeaud slice
-sources:
-- IMG_5682
 ingredients:
 - group:
     sr: Testo

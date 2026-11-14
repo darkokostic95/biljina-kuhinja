@@ -7,8 +7,6 @@ category: bez-pecenja
 tags:
 - cokolada
 - voce
-sources:
-- IMG_5587
 ingredients:
 - group:
     sr: Sastojci

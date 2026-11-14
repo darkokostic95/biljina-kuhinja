@@ -7,8 +7,6 @@ category: salate-predjela
 tags:
 - povrce
 - orasi
-sources:
-- IMG_5623
 ingredients:
 - group:
     sr: Sastojci

@@ -7,9 +7,6 @@ category: peciva
 tags:
 - susam
 - kikiriki
-sources:
-- IMG_5594
-- IMG_5647
 ingredients:
 - group:
     sr: Sastojci

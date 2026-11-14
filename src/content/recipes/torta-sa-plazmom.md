@@ -7,8 +7,6 @@ category: torte
 tags:
 - plazma
 - orasi
-sources:
-- IMG_5577
 ingredients:
 - group:
     sr: Korice (×3)

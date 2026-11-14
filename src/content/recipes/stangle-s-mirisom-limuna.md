@@ -5,8 +5,6 @@ title:
   en: Lemon Meringue Bars
 category: kolaci
 tags: []
-sources:
-- IMG_5701
 ingredients:
 - group:
     sr: Sastojci

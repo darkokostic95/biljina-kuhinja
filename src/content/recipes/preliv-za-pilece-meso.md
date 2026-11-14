@@ -7,9 +7,6 @@ category: glavna-jela
 tags:
 - piletina
 - med
-sources:
-- IMG_5638
-- IMG_5639
 ingredients:
 - group:
     sr: I preliv

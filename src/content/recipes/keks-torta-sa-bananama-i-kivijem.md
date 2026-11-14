@@ -9,8 +9,6 @@ tags:
 - banane
 - voce
 - bez-pecenja
-sources:
-- IMG_5661
 ingredients:
 - group:
     sr: Sastojci

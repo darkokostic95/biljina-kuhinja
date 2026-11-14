@@ -10,8 +10,6 @@ tags:
 - kikiriki
 - keks
 - med
-sources:
-- IMG_5600
 ingredients:
 - group:
     sr: Sastojci

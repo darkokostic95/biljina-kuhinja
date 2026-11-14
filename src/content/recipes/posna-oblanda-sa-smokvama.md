@@ -10,9 +10,6 @@ tags:
 - oblanda
 - orasi
 - voce
-sources:
-- IMG_5597
-- IMG_5667
 ingredients:
 - group:
     sr: I list

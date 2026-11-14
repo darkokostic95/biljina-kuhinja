@@ -6,8 +6,6 @@ title:
 category: salate-predjela
 tags:
 - piletina
-sources:
-- IMG_5654
 ingredients:
 - group:
     sr: Sastojci

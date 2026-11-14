@@ -7,9 +7,6 @@ category: pite
 tags:
 - sir
 - kvasac
-sources:
-- IMG_5603
-- IMG_5678
 ingredients:
 - group:
     sr: Preliv za kore

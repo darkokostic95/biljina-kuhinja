@@ -9,8 +9,6 @@ tags:
 - keks
 - orasi
 - cokolada
-sources:
-- IMG_5596
 ingredients:
 - group:
     sr: Tamni deo

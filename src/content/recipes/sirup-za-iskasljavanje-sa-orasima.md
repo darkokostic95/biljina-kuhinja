@@ -6,8 +6,6 @@ title:
 category: napici
 tags:
 - orasi
-sources:
-- IMG_5544
 ingredients:
 - group:
     sr: Sastojci

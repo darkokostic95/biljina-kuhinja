@@ -13,9 +13,6 @@ aliases:
   en:
   - cookies
   - linzer cookies
-sources:
-- IMG_5699
-- IMG_5715
 ingredients:
 - group:
     sr: Sastojci

@@ -7,8 +7,6 @@ category: sitni-kolaci
 tags:
 - cokolada
 - brzo
-sources:
-- IMG_5601
 ingredients:
 - group:
     sr: Sastojci

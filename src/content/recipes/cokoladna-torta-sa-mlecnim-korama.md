@@ -6,8 +6,6 @@ title:
 category: torte
 tags:
 - cokolada
-sources:
-- IMG_5559
 ingredients:
 - group:
     sr: Kore (×3)

@@ -8,8 +8,6 @@ tags:
 - banane
 - cokolada
 - orasi
-sources:
-- IMG_5716
 ingredients:
 - group:
     sr: Kora

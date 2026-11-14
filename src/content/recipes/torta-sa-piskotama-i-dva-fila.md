@@ -10,8 +10,6 @@ tags:
 - cokolada
 - lesnik
 - bez-pecenja
-sources:
-- IMG_5578
 ingredients:
 - group:
     sr: Tamni fil

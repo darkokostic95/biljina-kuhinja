@@ -58,7 +58,7 @@ steps:
   sr: ["Umutiti jaja sa šećerom…", "…"]
   en: ["Beat the eggs with the sugar…", "…"]
 notes: { sr: "Električni kalup.", en: "Electric baking mould." }
-sources: [IMG_5680]              # original photos, shown on the page as "Original zapis"
+# (photo file names are no longer stored in recipe files)
 uncertain: []                    # anything still unclear
 ```
 

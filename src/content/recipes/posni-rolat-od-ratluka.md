@@ -8,8 +8,6 @@ tags:
 - posno
 - bez-pecenja
 - orasi
-sources:
-- IMG_5702
 ingredients:
 - group:
     sr: Sastojci

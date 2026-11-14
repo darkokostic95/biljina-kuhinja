@@ -8,8 +8,6 @@ tags:
 - bez-pecenja
 - oblanda
 - orasi
-sources:
-- IMG_5721
 ingredients:
 - group:
     sr: Sastojci

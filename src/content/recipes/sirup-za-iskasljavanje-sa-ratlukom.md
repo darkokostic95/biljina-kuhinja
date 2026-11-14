@@ -5,8 +5,6 @@ title:
   en: Cough Syrup with Turkish Delight
 category: napici
 tags: []
-sources:
-- IMG_5688
 ingredients:
 - group:
     sr: Sastojci

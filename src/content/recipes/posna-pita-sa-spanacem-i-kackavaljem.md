@@ -8,8 +8,6 @@ tags:
 - posno
 - sir
 - povrce
-sources:
-- IMG_5601
 ingredients:
 - group:
     sr: Sastojci

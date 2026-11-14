@@ -6,8 +6,6 @@ title:
 category: torte
 tags:
 - lesnik
-sources:
-- IMG_5709
 ingredients:
 - group:
     sr: Fil

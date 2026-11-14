@@ -7,10 +7,6 @@ category: kremovi-sladoledi
 tags:
 - banane
 - cokolada
-sources:
-- IMG_5696
-- IMG_5710
-- IMG_5711
 ingredients:
 - group:
     sr: Sastojci

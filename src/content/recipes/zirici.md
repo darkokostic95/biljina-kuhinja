@@ -8,8 +8,6 @@ tags:
 - kokos
 - orasi
 - cokolada
-sources:
-- IMG_5590
 ingredients:
 - group:
     sr: Testo

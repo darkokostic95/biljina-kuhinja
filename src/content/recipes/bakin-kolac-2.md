@@ -11,8 +11,6 @@ aliases:
   - kuglof
   en:
   - bundt cake
-sources:
-- IMG_5680
 ingredients:
 - group:
     sr: Sastojci

@@ -13,9 +13,6 @@ aliases:
   en:
   - pepper spread
   - red pepper relish
-sources:
-- IMG_5585
-- IMG_5632
 ingredients:
 - group:
     sr: Sastojci

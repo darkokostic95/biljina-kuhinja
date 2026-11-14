@@ -8,8 +8,6 @@ tags:
 - piletina
 - meso
 - sir
-sources:
-- IMG_5637
 ingredients:
 - group:
     sr: Sastojci

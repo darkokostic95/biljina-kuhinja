@@ -13,8 +13,6 @@ aliases:
   en:
   - honey cake
   - medovik
-sources:
-- IMG_5701
 ingredients:
 - group:
     sr: Korice (×3)

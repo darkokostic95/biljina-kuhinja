@@ -6,8 +6,6 @@ title:
 category: kolaci
 tags:
 - orasi
-sources:
-- IMG_5705
 ingredients:
 - group:
     sr: Testo

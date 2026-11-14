@@ -8,8 +8,6 @@ tags:
 - posno
 - susam
 - povrce
-sources:
-- IMG_5668
 ingredients:
 - group:
     sr: Sastojci

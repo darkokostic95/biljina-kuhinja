@@ -9,9 +9,6 @@ tags:
 - kokos
 - keks
 - orasi
-sources:
-- IMG_5575
-- IMG_5697
 ingredients:
 - group:
     sr: Tamni deo

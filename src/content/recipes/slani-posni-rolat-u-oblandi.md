@@ -8,9 +8,6 @@ tags:
 - posno
 - oblanda
 - povrce
-sources:
-- IMG_5658
-- IMG_5659
 ingredients:
 - group:
     sr: Sastojci

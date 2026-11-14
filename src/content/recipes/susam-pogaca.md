@@ -8,8 +8,6 @@ tags:
 - susam
 - sir
 - brzo
-sources:
-- IMG_5644
 ingredients:
 - group:
     sr: Sastojci

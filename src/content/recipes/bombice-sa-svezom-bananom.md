@@ -10,8 +10,6 @@ tags:
 - kokos
 - keks
 - brzo
-sources:
-- IMG_5694
 ingredients:
 - group:
     sr: Sastojci

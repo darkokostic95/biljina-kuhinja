@@ -6,8 +6,6 @@ title:
 category: zimnica
 tags:
 - povrce
-sources:
-- IMG_5633
 ingredients:
 - group:
     sr: Sastojci

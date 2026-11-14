@@ -9,8 +9,6 @@ tags:
 - meso
 - susam
 - bez-pecenja
-sources:
-- IMG_5668
 ingredients:
 - group:
     sr: Sastojci

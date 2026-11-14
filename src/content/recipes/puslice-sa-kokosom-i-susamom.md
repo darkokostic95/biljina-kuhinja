@@ -7,8 +7,6 @@ category: sitni-kolaci
 tags:
 - kokos
 - susam
-sources:
-- IMG_5706
 ingredients:
 - group:
     sr: Sastojci

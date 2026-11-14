@@ -9,8 +9,6 @@ tags:
 - orasi
 - keks
 - cokolada
-sources:
-- IMG_5561
 ingredients:
 - group:
     sr: Kora

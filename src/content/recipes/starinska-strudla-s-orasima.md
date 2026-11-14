@@ -9,8 +9,6 @@ tags:
 - kvasac
 - voce
 - praznicno
-sources:
-- IMG_5616
 ingredients:
 - group:
     sr: Testo

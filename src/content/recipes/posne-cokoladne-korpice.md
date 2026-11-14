@@ -9,8 +9,6 @@ tags:
 - bez-pecenja
 - cokolada
 - kikiriki
-sources:
-- IMG_5597
 ingredients:
 - group:
     sr: Sastojci

@@ -7,8 +7,6 @@ category: bez-pecenja
 tags:
 - bez-pecenja
 - oblanda
-sources:
-- IMG_5708
 ingredients:
 - group:
     sr: Sastojci

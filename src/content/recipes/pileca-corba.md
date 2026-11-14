@@ -14,8 +14,6 @@ aliases:
   en:
   - soup
   - chicken soup
-sources:
-- IMG_5663
 ingredients:
 - group:
     sr: Sastojci

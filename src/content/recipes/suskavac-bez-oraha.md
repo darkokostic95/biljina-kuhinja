@@ -7,8 +7,6 @@ category: torte
 tags:
 - plazma
 - banane
-sources:
-- IMG_5565
 ingredients:
 - group:
     sr: Kora

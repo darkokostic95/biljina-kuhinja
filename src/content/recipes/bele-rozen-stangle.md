@@ -7,8 +7,6 @@ category: kolaci
 tags:
 - cokolada
 - oblanda
-sources:
-- IMG_5569
 ingredients:
 - group:
     sr: Sastojci

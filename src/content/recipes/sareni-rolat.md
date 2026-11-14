@@ -11,8 +11,6 @@ tags:
 - keks
 - orasi
 - cokolada
-sources:
-- IMG_5712
 ingredients:
 - group:
     sr: Beli fil

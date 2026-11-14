@@ -8,8 +8,6 @@ tags:
 - meso
 - sir
 - bez-pecenja
-sources:
-- IMG_5599
 ingredients:
 - group:
     sr: Sastojci

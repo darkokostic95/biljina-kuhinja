@@ -13,8 +13,6 @@ aliases:
   - ćurka
   en:
   - turkey
-sources:
-- IMG_5619
 ingredients:
 - group:
     sr: Sastojci

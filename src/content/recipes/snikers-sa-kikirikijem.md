@@ -9,9 +9,6 @@ tags:
 - kikiriki
 - keks
 - cokolada
-sources:
-- IMG_5714
-- IMG_5715
 ingredients:
 - group:
     sr: I deo

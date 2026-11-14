@@ -9,9 +9,6 @@ tags:
 - susam
 - bez-pecenja
 - brzo
-sources:
-- IMG_5608
-- IMG_5677
 ingredients:
 - group:
     sr: Sastojci

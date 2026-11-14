@@ -10,8 +10,6 @@ tags:
 - kokos
 - keks
 - orasi
-sources:
-- IMG_5595
 ingredients:
 - group:
     sr: Sastojci

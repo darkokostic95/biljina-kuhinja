@@ -7,8 +7,6 @@ category: salate-predjela
 tags:
 - sir
 - povrce
-sources:
-- IMG_5584
 ingredients:
 - group:
     sr: Sastojci

@@ -8,8 +8,6 @@ tags:
 - plazma
 - orasi
 - cokolada
-sources:
-- IMG_5679
 ingredients:
 - group:
     sr: Kora

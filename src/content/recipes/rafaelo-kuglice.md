@@ -14,9 +14,6 @@ aliases:
   en:
   - coconut balls
   - raffaello
-sources:
-- IMG_5591
-- IMG_5595
 ingredients:
 - group:
     sr: Sastojci

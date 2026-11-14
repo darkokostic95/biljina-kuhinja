@@ -6,8 +6,6 @@ title:
 category: kolaci
 tags:
 - brzo
-sources:
-- IMG_5589
 ingredients:
 - group:
     sr: Sastojci

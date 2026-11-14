@@ -7,10 +7,6 @@ category: torte
 tags:
 - cokolada
 - lesnik
-sources:
-- IMG_5554
-- IMG_5659
-- IMG_5660
 ingredients:
 - group:
     sr: Fil

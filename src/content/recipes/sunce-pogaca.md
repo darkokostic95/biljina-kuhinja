@@ -8,9 +8,6 @@ tags:
 - kvasac
 - susam
 - praznicno
-sources:
-- IMG_5645
-- IMG_5646
 ingredients:
 - group:
     sr: Testo

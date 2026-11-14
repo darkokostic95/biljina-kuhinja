@@ -8,8 +8,6 @@ tags:
 - bez-pecenja
 - orasi
 - cokolada
-sources:
-- IMG_5697
 ingredients:
 - group:
     sr: Sastojci

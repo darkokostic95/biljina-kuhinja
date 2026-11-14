@@ -7,8 +7,6 @@ category: peciva
 tags:
 - brzo
 - posno
-sources:
-- IMG_5602
 ingredients:
 - group:
     sr: Sastojci

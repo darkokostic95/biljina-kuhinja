@@ -7,7 +7,6 @@ export interface Recipe {
   category: string;
   tags: string[];
   aliases?: { sr?: string[]; en?: string[] };
-  sources: string[];
   ingredients: { group: { sr: string; en: string }; sr: string[]; en: string[] }[];
   steps: { sr: string[]; en: string[] };
   notes?: { sr: string; en: string } | null;

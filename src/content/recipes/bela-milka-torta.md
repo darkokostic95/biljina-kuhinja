@@ -6,8 +6,6 @@ title:
 category: torte
 tags:
 - cokolada
-sources:
-- IMG_5557
 ingredients:
 - group:
     sr: Korice (×4)

@@ -7,8 +7,6 @@ category: peciva
 tags:
 - posno
 - kvasac
-sources:
-- IMG_5674
 ingredients:
 - group:
     sr: Sastojci

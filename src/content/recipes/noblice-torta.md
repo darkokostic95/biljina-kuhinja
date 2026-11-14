@@ -7,8 +7,6 @@ category: torte
 tags:
 - keks
 - cokolada
-sources:
-- IMG_5555
 ingredients:
 - group:
     sr: Sastojci

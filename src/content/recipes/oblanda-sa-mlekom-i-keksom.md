@@ -10,8 +10,6 @@ tags:
 - keks
 - orasi
 - brzo
-sources:
-- IMG_5695
 ingredients:
 - group:
     sr: Sastojci

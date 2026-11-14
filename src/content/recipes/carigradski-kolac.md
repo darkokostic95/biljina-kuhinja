@@ -7,8 +7,6 @@ category: kolaci
 tags:
 - oblanda
 - orasi
-sources:
-- IMG_5596
 ingredients:
 - group:
     sr: Sastojci

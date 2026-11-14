@@ -10,8 +10,6 @@ tags:
 - keks
 - kokos
 - cokolada
-sources:
-- IMG_5703
 ingredients:
 - group:
     sr: Sastojci

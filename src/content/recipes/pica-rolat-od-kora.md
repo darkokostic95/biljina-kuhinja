@@ -7,8 +7,6 @@ category: pite
 tags:
 - meso
 - sir
-sources:
-- IMG_5672
 ingredients:
 - group:
     sr: Smesa

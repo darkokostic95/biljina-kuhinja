@@ -11,8 +11,6 @@ aliases:
   - sladoled
   en:
   - ice cream
-sources:
-- IMG_5689
 ingredients:
 - group:
     sr: Sastojci

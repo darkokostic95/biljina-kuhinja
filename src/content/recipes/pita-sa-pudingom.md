@@ -5,10 +5,6 @@ title:
   en: Custard Filo Pie
 category: pite
 tags: []
-sources:
-- IMG_5580
-- IMG_5722
-- IMG_5724
 ingredients:
 - group:
     sr: Preliv za kore

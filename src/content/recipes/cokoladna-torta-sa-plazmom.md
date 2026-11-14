@@ -7,8 +7,6 @@ category: torte
 tags:
 - cokolada
 - plazma
-sources:
-- IMG_5556
 ingredients:
 - group:
     sr: Masa (za kore i fil)

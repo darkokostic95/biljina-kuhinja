@@ -11,8 +11,6 @@ tags:
 - med
 - keks
 - orasi
-sources:
-- IMG_5598
 ingredients:
 - group:
     sr: Sastojci

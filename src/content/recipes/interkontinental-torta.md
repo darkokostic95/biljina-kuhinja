@@ -9,8 +9,6 @@ tags:
 - cokolada
 - kokos
 - lesnik
-sources:
-- IMG_5547
 ingredients:
 - group:
     sr: Kore (×3)

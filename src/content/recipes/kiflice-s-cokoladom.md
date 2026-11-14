@@ -14,10 +14,6 @@ aliases:
   en:
   - sweet rolls
   - croissants
-sources:
-- IMG_5660
-- IMG_5661
-- IMG_5725
 ingredients:
 - group:
     sr: Sastojci

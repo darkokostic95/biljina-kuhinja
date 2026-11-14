@@ -6,8 +6,6 @@ title:
 category: peciva
 tags:
 - sir
-sources:
-- IMG_5593
 ingredients:
 - group:
     sr: Sastojci

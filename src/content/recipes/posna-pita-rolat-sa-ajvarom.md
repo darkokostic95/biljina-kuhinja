@@ -7,8 +7,6 @@ category: pite
 tags:
 - posno
 - povrce
-sources:
-- IMG_5604
 ingredients:
 - group:
     sr: Smesa za premazivanje

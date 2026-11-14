@@ -6,8 +6,6 @@ title:
 category: peciva
 tags:
 - kvasac
-sources:
-- IMG_5658
 ingredients:
 - group:
     sr: Kvasac

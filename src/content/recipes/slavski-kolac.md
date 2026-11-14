@@ -6,8 +6,6 @@ title:
 category: peciva
 tags:
 - praznicno
-sources:
-- IMG_5605
 ingredients:
 - group:
     sr: Testo za figure

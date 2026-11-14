@@ -8,8 +8,6 @@ tags:
 - posno
 - orasi
 - keks
-sources:
-- IMG_5711
 ingredients:
 - group:
     sr: Sastojci

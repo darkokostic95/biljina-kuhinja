@@ -6,8 +6,6 @@ title:
 category: kolaci
 tags:
 - cokolada
-sources:
-- IMG_5588
 ingredients:
 - group:
     sr: Kora

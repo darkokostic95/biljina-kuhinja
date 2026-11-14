@@ -8,8 +8,6 @@ tags:
 - posno
 - jabuke
 - orasi
-sources:
-- IMG_5582
 ingredients:
 - group:
     sr: Sastojci

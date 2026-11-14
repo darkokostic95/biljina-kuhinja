@@ -10,8 +10,6 @@ tags:
 - cokolada
 - bez-pecenja
 - brzo
-sources:
-- IMG_5687
 ingredients:
 - group:
     sr: Sastojci

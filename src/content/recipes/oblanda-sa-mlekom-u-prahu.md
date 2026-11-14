@@ -8,8 +8,6 @@ tags:
 - bez-pecenja
 - oblanda
 - cokolada
-sources:
-- IMG_5722
 ingredients:
 - group:
     sr: Sastojci

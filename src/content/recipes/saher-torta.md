@@ -12,8 +12,6 @@ aliases:
   - sacher
   en:
   - sacher
-sources:
-- IMG_5725
 ingredients:
 - group:
     sr: Kora

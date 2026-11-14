@@ -7,9 +7,6 @@ category: salate-predjela
 tags:
 - povrce
 - meso
-sources:
-- IMG_5608
-- IMG_5641
 ingredients:
 - group:
     sr: Sastojci

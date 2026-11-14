@@ -10,8 +10,6 @@ tags:
 - keks
 - cokolada
 - brzo
-sources:
-- IMG_5703
 ingredients:
 - group:
     sr: Sastojci

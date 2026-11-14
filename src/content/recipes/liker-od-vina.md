@@ -5,9 +5,6 @@ title:
   en: Wine and Vanilla Liqueur
 category: napici
 tags: []
-sources:
-- IMG_5687
-- IMG_5678
 ingredients:
 - group:
     sr: Sastojci

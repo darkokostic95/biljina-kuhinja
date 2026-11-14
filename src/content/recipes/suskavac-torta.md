@@ -13,10 +13,6 @@ aliases:
   en:
   - meringue cake
   - pavlova layer cake
-sources:
-- IMG_5564
-- IMG_5656
-- IMG_5657
 ingredients:
 - group:
     sr: Kora

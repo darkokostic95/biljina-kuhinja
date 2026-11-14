@@ -14,8 +14,6 @@ aliases:
   - pica
   en:
   - pizza
-sources:
-- IMG_5670
 ingredients:
 - group:
     sr: Testo

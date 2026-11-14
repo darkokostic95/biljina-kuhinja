@@ -14,8 +14,6 @@ aliases:
   en:
   - vegan stew
   - soy chunks
-sources:
-- IMG_5545
 ingredients:
 - group:
     sr: Sastojci

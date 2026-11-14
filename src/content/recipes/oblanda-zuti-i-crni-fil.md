@@ -8,9 +8,6 @@ tags:
 - oblanda
 - keks
 - cokolada
-sources:
-- IMG_5593
-- IMG_5596
 ingredients:
 - group:
     sr: Žuti fil

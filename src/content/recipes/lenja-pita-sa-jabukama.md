@@ -11,9 +11,6 @@ aliases:
   - pita sa jabukama
   en:
   - apple slice
-sources:
-- IMG_5571
-- IMG_5717
 ingredients:
 - group:
     sr: Testo

@@ -7,9 +7,6 @@ category: torte
 tags:
 - cokolada
 - orasi
-sources:
-- IMG_5554
-- IMG_5659
 ingredients:
 - group:
     sr: I i II kora

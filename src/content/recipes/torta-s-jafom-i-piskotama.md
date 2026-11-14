@@ -8,8 +8,6 @@ tags:
 - keks
 - plazma
 - banane
-sources:
-- IMG_5702
 ingredients:
 - group:
     sr: Kora od keksa

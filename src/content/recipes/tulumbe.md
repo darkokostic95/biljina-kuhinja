@@ -5,8 +5,6 @@ title:
   en: Tulumbe (Syrup Fritters)
 category: sitni-kolaci
 tags: []
-sources:
-- IMG_5682
 ingredients:
 - group:
     sr: Testo

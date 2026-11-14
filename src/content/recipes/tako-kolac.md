@@ -7,8 +7,6 @@ category: kolaci
 tags:
 - cokolada
 - brzo
-sources:
-- IMG_5588
 ingredients:
 - group:
     sr: Testo

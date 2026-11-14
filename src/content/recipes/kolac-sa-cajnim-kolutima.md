@@ -9,8 +9,6 @@ tags:
 - keks
 - orasi
 - oblanda
-sources:
-- IMG_5574
 ingredients:
 - group:
     sr: Sastojci

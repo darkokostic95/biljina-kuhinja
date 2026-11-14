@@ -10,8 +10,6 @@ tags:
 - orasi
 - voce
 - brzo
-sources:
-- IMG_5708
 ingredients:
 - group:
     sr: Sastojci

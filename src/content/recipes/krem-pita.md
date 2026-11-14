@@ -12,10 +12,6 @@ aliases:
   en:
   - custard slice
   - vanilla slice
-sources:
-- IMG_5709
-- IMG_5710
-- IMG_5713
 ingredients:
 - group:
     sr: Kora

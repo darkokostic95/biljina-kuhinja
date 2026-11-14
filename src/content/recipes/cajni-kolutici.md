@@ -12,10 +12,6 @@ aliases:
   - kolutići
   en:
   - doughnut rings
-sources:
-- IMG_5571
-- IMG_5612
-- IMG_5698
 ingredients:
 - group:
     sr: Sastojci

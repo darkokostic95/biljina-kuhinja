@@ -6,8 +6,6 @@ title:
 category: peciva
 tags:
 - posno
-sources:
-- IMG_5709
 ingredients:
 - group:
     sr: Sastojci

@@ -6,8 +6,6 @@ title:
 category: peciva
 tags:
 - brzo
-sources:
-- IMG_5609
 ingredients:
 - group:
     sr: Sastojci

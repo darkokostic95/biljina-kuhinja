@@ -12,8 +12,6 @@ aliases:
   en:
   - gingerbread
   - spice cookies
-sources:
-- IMG_5692
 ingredients:
 - group:
     sr: Testo

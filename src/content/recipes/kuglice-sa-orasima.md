@@ -8,8 +8,6 @@ tags:
 - bez-pecenja
 - orasi
 - cokolada
-sources:
-- IMG_5589
 ingredients:
 - group:
     sr: Kuglice

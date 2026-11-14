@@ -8,8 +8,6 @@ tags:
 - plazma
 - cokolada
 - banane
-sources:
-- IMG_5712
 ingredients:
 - group:
     sr: Kore (×2)

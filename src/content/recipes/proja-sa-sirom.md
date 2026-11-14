@@ -12,10 +12,6 @@ aliases:
   - kukuruzni hleb
   en:
   - cornbread
-sources:
-- IMG_5644
-- IMG_5673
-- IMG_5674
 ingredients:
 - group:
     sr: Sastojci

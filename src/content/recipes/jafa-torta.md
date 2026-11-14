@@ -8,8 +8,6 @@ tags:
 - keks
 - bez-pecenja
 - brzo
-sources:
-- IMG_5560
 ingredients:
 - group:
     sr: Sastojci

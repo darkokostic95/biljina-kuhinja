@@ -13,9 +13,6 @@ aliases:
   en:
   - pickles
   - cucumbers
-sources:
-- IMG_5581
-- IMG_5582
 ingredients:
 - group:
     sr: Rastvor (za 4 tegle)

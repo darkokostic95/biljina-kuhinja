@@ -8,9 +8,6 @@ tags:
 - povrce
 - sir
 - meso
-sources:
-- IMG_5622
-- IMG_5623
 ingredients:
 - group:
     sr: Kora

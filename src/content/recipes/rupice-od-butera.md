@@ -7,8 +7,6 @@ category: sitni-kolaci
 tags:
 - cokolada
 - praznicno
-sources:
-- IMG_5697
 ingredients:
 - group:
     sr: Testo

@@ -6,8 +6,6 @@ title:
 category: sitni-kolaci
 tags:
 - posno
-sources:
-- IMG_5684
 ingredients:
 - group:
     sr: Korice

@@ -6,8 +6,6 @@ title:
 category: glavna-jela
 tags:
 - meso
-sources:
-- IMG_5630
 ingredients:
 - group:
     sr: Za 2 osobe

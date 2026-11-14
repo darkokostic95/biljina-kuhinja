@@ -6,9 +6,6 @@ title:
 category: peciva
 tags:
 - kvasac
-sources:
-- IMG_5666
-- IMG_5677
 ingredients:
 - group:
     sr: Sastojci

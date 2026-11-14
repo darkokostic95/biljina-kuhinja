@@ -9,8 +9,6 @@ tags:
 - kokos
 - oblanda
 - cokolada
-sources:
-- IMG_5718
 ingredients:
 - group:
     sr: I kora

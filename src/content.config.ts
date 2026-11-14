@@ -12,7 +12,6 @@ const recipes = defineCollection({
     category: z.string(),
     tags: z.array(z.string()).default([]),
     aliases: biList.partial().optional(),
-    sources: z.array(z.string()).default([]),
     ingredients: z.array(z.object({ group: bi, sr: z.array(z.string()), en: z.array(z.string()) })),
     steps: biList,
     notes: bi.nullish(),

@@ -8,8 +8,6 @@ tags:
 - posno
 - kikiriki
 - susam
-sources:
-- IMG_5709
 ingredients:
 - group:
     sr: Sastojci

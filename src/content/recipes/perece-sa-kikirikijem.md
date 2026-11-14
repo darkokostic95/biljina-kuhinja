@@ -8,8 +8,6 @@ tags:
 - kikiriki
 - susam
 - kvasac
-sources:
-- IMG_5610
 ingredients:
 - group:
     sr: Sastojci

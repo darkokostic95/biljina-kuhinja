@@ -7,8 +7,6 @@ category: bez-pecenja
 tags:
 - bez-pecenja
 - keks
-sources:
-- IMG_5699
 ingredients:
 - group:
     sr: Sastojci

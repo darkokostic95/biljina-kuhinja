@@ -10,8 +10,6 @@ tags:
 - orasi
 - keks
 - voce
-sources:
-- IMG_5587
 ingredients:
 - group:
     sr: Sastojci

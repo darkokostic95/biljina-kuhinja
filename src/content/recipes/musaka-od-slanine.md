@@ -7,8 +7,6 @@ category: glavna-jela
 tags:
 - meso
 - povrce
-sources:
-- IMG_5621
 ingredients:
 - group:
     sr: Sastojci

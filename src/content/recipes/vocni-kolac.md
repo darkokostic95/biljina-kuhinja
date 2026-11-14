@@ -6,9 +6,6 @@ title:
 category: kolaci
 tags:
 - voce
-sources:
-- IMG_5572
-- IMG_5706
 ingredients:
 - group:
     sr: Patišpanj

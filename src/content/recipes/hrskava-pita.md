@@ -7,8 +7,6 @@ category: pite
 tags:
 - sir
 - brzo
-sources:
-- IMG_5614
 ingredients:
 - group:
     sr: Fil

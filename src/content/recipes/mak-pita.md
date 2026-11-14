@@ -6,8 +6,6 @@ title:
 category: pite
 tags:
 - mak
-sources:
-- IMG_5713
 ingredients:
 - group:
     sr: Sastojci

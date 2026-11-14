@@ -10,9 +10,6 @@ tags:
 - susam
 - cokolada
 - orasi
-sources:
-- IMG_5694
-- IMG_5703
 ingredients:
 - group:
     sr: Sastojci

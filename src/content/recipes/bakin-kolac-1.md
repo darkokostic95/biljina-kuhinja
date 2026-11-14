@@ -13,8 +13,6 @@ aliases:
   en:
   - bundt cake
   - yogurt cake
-sources:
-- IMG_5680
 ingredients:
 - group:
     sr: Sastojci
