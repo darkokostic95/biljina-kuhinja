@@ -119,7 +119,8 @@ const pad = (i: number) => String(i).padStart(4, '0');
     .stick { height: calc(100vh - var(--head-h)); }
   }
   .media { position: absolute; inset: 0; }
-  .poster, canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .poster, canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .poster { object-fit: contain; }
   canvas { opacity: 0; }
   .story.ready canvas { opacity: 1; }
   .story.ready .poster { visibility: hidden; }
@@ -163,7 +164,7 @@ const pad = (i: number) => String(i).padStart(4, '0');
   @media (min-width: 900px) {
     .story, .stick { background: var(--bg); }
     .stick { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: clamp(32px, 5vw, 80px); padding: 28px max(32px, calc((100vw - 1120px) / 2)); }
-    .media { position: relative; inset: auto; grid-column: 2; height: min(100%, 780px); aspect-ratio: 9 / 16; border-radius: 32px; overflow: hidden; box-shadow: 0 1px 0 #3b2a2014, 0 30px 70px #3b2a2030; background: var(--bgc); }
+    .media { --mh: min(calc(100vh - var(--head-h) - 56px), 780px); position: relative; inset: auto; grid-column: 2; height: var(--mh); width: calc(var(--mh) * 0.5625); border-radius: 32px; overflow: hidden; box-shadow: 0 1px 0 #3b2a2014, 0 30px 70px #3b2a2030; background: var(--bgc); }
     .side { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; gap: 28px; min-width: 0; }
     .txt { position: static; padding: 0; text-align: left; pointer-events: auto; }
     .txt h1 { font-size: clamp(52px, 6.2vw, 96px); max-width: 11ch; margin: 0; text-shadow: none; }
@@ -233,14 +234,24 @@ const pad = (i: number) => String(i).padStart(4, '0');
       for (let d = 0; d < a.length; d++) { if (a[i - d]) return a[i - d]; if (a[i + d]) return a[i + d]; }
       return null;
     };
-    let bg = '';
+    let bg = '', bg0 = '';
+    // Fit the film so the whole dish always shows: never zoom in more than 15% past "fit inside".
+    // Where the frame does not reach the edge, the studio background colour continues and the frame edge is feathered into it.
     const put = (im: Img, alpha: number) => {
       const cw = cv.width, ch = cv.height;
-      const s = Math.max(cw / D.w, ch / D.h);
-      const dw = D.w * s, dh = D.h * s;
+      const contain = Math.min(cw / D.w, ch / D.h), cover = Math.max(cw / D.w, ch / D.h);
+      const s = Math.min(cover, contain * 1.15);
+      const dw = D.w * s, dh = D.h * s, x = (cw - dw) / 2, y = (ch - dh) / 2;
       ctx.globalAlpha = alpha;
-      ctx.drawImage(im as any, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+      ctx.drawImage(im as any, x, y, dw, dh);
       ctx.globalAlpha = 1;
+      const fade = (x0: number, y0: number, x1: number, y1: number, rx: number, ry: number, rw: number, rh: number) => {
+        const g = ctx.createLinearGradient(x0, y0, x1, y1);
+        g.addColorStop(0, bg); g.addColorStop(1, bg0);
+        ctx.fillStyle = g; ctx.fillRect(rx, ry, rw, rh);
+      };
+      if (x > 1) { const f = dw * 0.12; fade(x, 0, x + f, 0, x - 1, 0, f + 1, ch); fade(x + dw, 0, x + dw - f, 0, x + dw - f, 0, f + 1, ch); }
+      if (y > 1) { const f = dh * 0.08; fade(0, y, 0, y + f, 0, y - 1, cw, f + 1); fade(0, y + dh, 0, y + dh - f, 0, y + dh - f, cw, f + 1); }
     };
     const draw = () => {
       raf = 0;
@@ -251,8 +262,8 @@ const pad = (i: number) => String(i).padStart(4, '0');
       if (key === drawn) return;
       if (!bg) {                                              // sample the studio background once
         const t = document.createElement('canvas'); t.width = t.height = 1;
-        const x = t.getContext('2d')!; x.drawImage(a as any, 2, 2, 1, 1, 0, 0, 1, 1);
-        const [r, g, bl] = x.getImageData(0, 0, 1, 1).data; bg = `rgb(${r},${g},${bl})`;
+        const x = t.getContext('2d')!; x.drawImage(a as any, 3, D.h * 0.45, 4, 40, 0, 0, 1, 1);   // left edge, mid height
+        const [r, g, bl] = x.getImageData(0, 0, 1, 1).data; bg = `rgb(${r},${g},${bl})`; bg0 = `rgba(${r},${g},${bl},0)`;
         root.style.setProperty('--bgc', bg);
       }
       ctx.fillStyle = bg; ctx.fillRect(0, 0, cv.width, cv.height);
