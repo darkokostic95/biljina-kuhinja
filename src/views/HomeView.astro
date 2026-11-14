@@ -14,16 +14,16 @@ const all = await allRecipes();
 const count = (id: string) => all.filter((r) => r.category === id).length;
 const pick = ['tiramisu', ...['torte', 'peciva', 'glavna-jela', 'pite', 'zimnica'].map((c) => all.find((r) => r.category === c && r.slug !== 'tiramisu')!.slug)];
 const featured = pick.map((s) => all.find((r) => r.slug === s)!).filter(Boolean);
-// the scroll story is used only when rendered frames exist in public/hero/m
-let hero: { count: number; w: number; h: number } | null = null;
-try { hero = JSON.parse(fs.readFileSync('public/hero/m/manifest.json', 'utf8')); if (!hero!.count) hero = null; } catch {}
+// the scroll story is used only when frames exist (scripts/clips_to_frames.py)
+let story: any = null;
+try { story = JSON.parse(fs.readFileSync('public/hero/story.json', 'utf8')); if (!story.chapters?.length) story = null; } catch {}
 const quick = ['posno', 'brzo', 'bez-pecenja', 'cokolada', 'orasi', 'praznicno'];
 const jsonld = { '@context': 'https://schema.org', '@type': 'WebSite', name: ui.site, url: new URL(url(lang, 'home'), Astro.site).href, inLanguage: lang === 'sr' ? 'sr-Latn' : 'en' };
 ---
 <Base lang={lang} alt={url(lang === 'sr' ? 'en' : 'sr', 'home')} active="home" jsonld={jsonld}>
-  {hero && <Story lang={lang} count={hero.count} w={hero.w} h={hero.h} total={all.length} />}
-  <div class="wrap">
-    {!hero && (
+  {story && <Story lang={lang} story={story} />}
+  <div class="wrap" id="posle">
+    {!story && (
     <div class="hero" id="hero">
       <img class="mark rise" src={asset('brand/mark.svg')} alt="" width="177" height="202" fetchpriority="high" />
       <h1 class="rise">{ui.site}</h1>
@@ -34,9 +34,14 @@ const jsonld = { '@context': 'https://schema.org', '@type': 'WebSite', name: ui.
       </div>
     </div>
     )}
-    {hero && (
-      <div class="chips" style="margin-top:18px">
-        {quick.map((q) => <a class={`chip t-${q}`} href={`${url(lang, 'search')}?q=${encodeURIComponent(tagLabel(q, lang))}`}>{tagLabel(q, lang)}</a>)}
+    {story && (
+      <div class="hero" style="padding-top:34px">
+        <h2 style="font-size:clamp(28px,7.4vw,44px)">{ui.searchPlaceholder}</h2>
+        <p class="tag-line">{ui.tagline}</p>
+        <SearchBox lang={lang} />
+        <div class="chips" data-home-chips>
+          {quick.map((q) => <a class={`chip t-${q}`} href={`${url(lang, 'search')}?q=${encodeURIComponent(tagLabel(q, lang))}`}>{tagLabel(q, lang)}</a>)}
+        </div>
       </div>
     )}
 

@@ -1,154 +1,296 @@
 ---
-// Scroll-driven hero: rendered Blender frames scrubbed by scroll, with real HTML on top.
-import { t, url, asset, type Lang } from '../lib/i18n';
+// Landing story: generated clips, scrubbed by scroll, in three chapters.
+// Frames come from scripts/clips_to_frames.py (public/hero/<chapter>/NNNN.webp + story.json).
+import { catById, plural, url, asset, type Lang } from '../lib/i18n';
+import { allRecipes } from '../lib/recipes';
 import { icon } from '../lib/icons';
-interface Props { lang: Lang; count: number; w: number; h: number; total: number }
-const { lang, count, w, h, total } = Astro.props;
-const ui = t(lang);
-const lead = lang === 'sr' ? `${total} recepata, prepisanih iz maminih svezaka` : `${total} recipes, copied from mom's notebooks`;
+
+interface Chapter { id: string; count: number; stages: number[] }
+interface Props { lang: Lang; story: { w: number; h: number; chapters: Chapter[] } }
+const { lang, story } = Astro.props;
+const all = await allRecipes();
+const n = (id: string) => all.filter((r) => r.category === id).length;
+
+const TEXT: Record<string, { label: { sr: string; en: string }; heads: { sr: string; en: string }[]; cats: string[] }> = {
+  torta: {
+    label: { sr: 'Torte i kolači', en: 'Cakes & sweets' },
+    heads: [
+      { sr: 'Sve počinje od brašna.', en: 'It all starts with flour.' },
+      { sr: 'Umućeno s ljubavlju.', en: 'Whisked with love.' },
+      { sr: 'Kora po kora.', en: 'Layer by layer.' },
+      { sr: 'Torta za svaku slavu.', en: 'A cake for every celebration.' },
+      { sr: 'Parče za vas.', en: 'A slice for you.' },
+    ],
+    cats: ['torte', 'kolaci', 'bez-pecenja', 'sitni-kolaci', 'kremovi-sladoledi'],
+  },
+  pecivo: {
+    label: { sr: 'Peciva i pite', en: 'Breads & pies' },
+    heads: [
+      { sr: 'Testo koje raste.', en: 'Dough that rises.' },
+      { sr: 'Razvučeno rukom.', en: 'Rolled by hand.' },
+      { sr: 'Uvijeno, pa u rernu.', en: 'Rolled up, then baked.' },
+      { sr: 'Toplo iz rerne.', en: 'Warm from the oven.' },
+    ],
+    cats: ['peciva', 'pite'],
+  },
+  jelo: {
+    label: { sr: 'Glavna jela', en: 'Main dishes' },
+    heads: [
+      { sr: 'Od svežeg…', en: 'From fresh…' },
+      { sr: '…do krčkanja.', en: '…to a slow simmer.' },
+      { sr: 'Ručak je gotov.', en: 'Lunch is ready.' },
+    ],
+    cats: ['glavna-jela', 'salate-predjela', 'zimnica', 'napici'],
+  },
+};
+const CLIP = 0.75;   // screens of scroll per clip
+const HOLD = 0.85;   // screens the finished dish holds while its card is up
+const chapters = story.chapters.map((c) => ({ ...c, ...TEXT[c.id], scrub: (c.stages.length - 1) * CLIP }));
+const total = chapters.reduce((s, c) => s + c.scrub + HOLD, 0);
 const cue = lang === 'sr' ? 'Skrolujte' : 'Scroll';
+const see = lang === 'sr' ? 'Pogledaj recepte' : 'See the recipes';
+const skip = lang === 'sr' ? 'Preskoči' : 'Skip';
+const data = { w: story.w, h: story.h, clip: CLIP, hold: HOLD, src: asset('hero/'), chapters: chapters.map((c) => ({ id: c.id, count: c.count, stages: c.stages, scrub: c.scrub, label: c.label[lang], heads: c.heads.map((h) => h[lang]) })) };
+const pad = (i: number) => String(i).padStart(4, '0');
 ---
-<section class="story" data-story data-count={count} data-w={w} data-h={h} data-src={asset('hero/m/')}>
+<section class="story" data-story={JSON.stringify(data)} style={`--total:${total}`}>
   <div class="stick">
-    <img class="poster" src={asset('hero/m/0000.webp')} alt="" width={w} height={h} fetchpriority="high" />
+    <img class="poster" src={asset(`hero/${chapters[0].id}/0000.webp`)} alt="" width={story.w} height={story.h} fetchpriority="high" />
     <canvas aria-hidden="true"></canvas>
-    <div class="ov o1">
-      <div class="top">
-        <h1>{ui.site}</h1>
-        <p>{ui.tagline}</p>
-      </div>
-      <div class="bottom">
-        <a class="fake-search" href={url(lang, 'search')}>
-          <Fragment set:html={icon('search')} /><span>{ui.searchPlaceholder}</span>
-        </a>
-        <span class="cue">{cue}<i></i></span>
-      </div>
+
+    <div class="txt">
+      <p class="label" data-label>{chapters[0].label[lang]}</p>
+      <h1 data-head>{chapters[0].heads[0][lang]}</h1>
     </div>
-    <div class="ov o2">
-      <div class="mid">
-        <h2>{lead}</h2>
-        <div class="row">
-          <a class="btn" href="#grupe">{ui.groupsTitle}</a>
-          <a class="btn ghost" href={url(lang, 'book')}>{ui.readAsBook}</a>
+
+    <ol class="dots" aria-label="Chapters">
+      {chapters.map((c, i) => <li><button type="button" data-dot={i} aria-label={c.label[lang]} aria-current={i === 0 ? 'true' : undefined}></button></li>)}
+    </ol>
+    <a class="skip" href="#posle">{skip}</a>
+
+    <div class="cue" data-cue>{cue}<i></i></div>
+
+    {chapters.map((c, i) => (
+      <div class="sheet" data-sheet={i} aria-hidden="true">
+        <div class="cats">
+          {c.cats.map((id) => (
+            <a href={url(lang, 'category', id)} tabindex="-1">
+              <b>{catById(id)[lang]}</b>
+              <span>{plural(n(id), lang)}</span>
+            </a>
+          ))}
         </div>
+        <a class="btn" href={url(lang, 'category', c.cats[0])} tabindex="-1">{see}<Fragment set:html={icon('chev')} /></a>
       </div>
-    </div>
-    <a class="skip" href="#grupe">{ui.skip}</a>
+    ))}
+  </div>
+
+  <!-- no-motion / no-script version: the three finished dishes -->
+  <div class="plain">
+    {chapters.map((c) => (
+      <article>
+        <img src={asset(`hero/${c.id}/${pad(c.count - 1)}.webp`)} alt={c.label[lang]} width={story.w} height={story.h} loading="lazy" />
+        <p class="label">{c.label[lang]}</p>
+        <h2>{c.heads[c.heads.length - 1][lang]}</h2>
+        <div class="cats">
+          {c.cats.map((id) => <a href={url(lang, 'category', id)}><b>{catById(id)[lang]}</b><span>{plural(n(id), lang)}</span></a>)}
+        </div>
+      </article>
+    ))}
   </div>
 </section>
 
 <style>
-  .story { position: relative; height: 330vh; margin: 0; }
+  .story { position: relative; margin: 0; --bgc: #EFE5D8; background: var(--bgc); }
+  .story { height: calc(var(--total) * 100vh + 100vh - var(--head-h) - var(--nav-h)); height: calc(var(--total) * 100svh + 100svh - var(--head-h) - var(--nav-h)); }
   .stick {
-    position: sticky; top: var(--head-h); overflow: hidden; background: #DDD0B6;
+    position: sticky; top: var(--head-h); overflow: hidden; background: var(--bgc);
     height: calc(100vh - var(--head-h) - var(--nav-h) - env(safe-area-inset-bottom));
     height: calc(100svh - var(--head-h) - var(--nav-h) - env(safe-area-inset-bottom));
   }
-  @media (min-width: 900px) { .stick { height: calc(100vh - var(--head-h)); } }
+  @media (min-width: 900px) {
+    .story { height: calc(var(--total) * 100vh + 100vh - var(--head-h)); }
+    .stick { height: calc(100vh - var(--head-h)); }
+  }
   .poster, canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   canvas { opacity: 0; }
   .story.ready canvas { opacity: 1; }
-  .ov { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 18px 16px 16px; pointer-events: none; will-change: opacity, transform; }
-  .ov a { pointer-events: auto; }
-  .o1 { justify-content: space-between; }
-  .o1 .top { text-align: center; padding-top: 2vh; }
-  .o1 h1 { font-size: clamp(34px, 10vw, 60px); }
-  .o1 .top p { font-weight: 700; color: var(--ink-2); margin-top: 6px; }
-  .o1 .bottom { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-  .fake-search {
-    width: 100%; max-width: 520px; height: 56px; border-radius: 999px; border: 2px solid var(--ink); background: #fff;
-    display: flex; align-items: center; gap: 12px; padding: 0 18px; font-weight: 600; color: #8D7E73; box-shadow: 0 3px 0 var(--ink);
+  .story.ready .poster { visibility: hidden; }
+
+  .txt { position: absolute; left: 0; right: 0; top: 0; padding: 22px 20px 0; text-align: center; pointer-events: none; }
+  .label { font-size: 12.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--main); margin: 0 0 8px; }
+  .txt h1 {
+    font-size: clamp(34px, 10.4vw, 68px); line-height: 1.0; letter-spacing: -0.035em; max-width: 12ch; margin: 0 auto;
+    text-shadow: 0 0 18px var(--bgc), 0 0 6px var(--bgc); transition: opacity .28s, transform .28s; text-wrap: balance;
   }
-  .fake-search :global(svg) { width: 22px; height: 22px; color: var(--ink); flex: none; }
-  .cue { font-size: 12.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .txt.swap h1, .txt.swap .label { opacity: 0; transform: translateY(8px); }
+  .txt .label { transition: opacity .28s, transform .28s; }
+  @media (min-height: 760px) { .txt { padding-top: 34px; } }
+
+  .dots { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .dots button { width: 28px; height: 28px; display: grid; place-items: center; }
+  .dots button::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #3b2a2040; transition: .2s; }
+  .dots button[aria-current='true']::after { background: var(--main); transform: scale(1.5); }
+  .skip { position: absolute; left: 12px; bottom: 12px; font-size: 13px; font-weight: 800; color: var(--ink-2); padding: 10px 8px; min-height: 40px; }
+
+  .cue { position: absolute; left: 0; right: 0; bottom: 18px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; pointer-events: none; transition: opacity .3s; }
   .cue i { width: 2px; height: 22px; background: var(--ink); border-radius: 2px; animation: cue 1.4s infinite ease-in-out; transform-origin: top; }
   @keyframes cue { 0%, 100% { transform: scaleY(.3); opacity: .4; } 50% { transform: scaleY(1); opacity: 1; } }
-  .o2 { justify-content: center; align-items: center; text-align: center; opacity: 0; }
-  .o2 .mid { background: color-mix(in srgb, var(--paper) 90%, transparent); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); padding: 22px 18px; border-radius: 22px; box-shadow: var(--shadow); max-width: 440px; }
-  .o2 h2 { font-size: clamp(24px, 6.4vw, 34px); }
-  .o2 .row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; }
-  .skip { position: absolute; right: 10px; top: 8px; font-size: 12.5px; font-weight: 700; color: var(--ink-2); padding: 8px; opacity: 0; }
-  .skip:focus { opacity: 1; }
+
+  .sheet {
+    position: absolute; left: 10px; right: 10px; bottom: 10px; padding: 14px; border-radius: 22px;
+    background: color-mix(in srgb, var(--paper) 94%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 -2px 0 #3b2a200d, 0 14px 40px #3b2a2030;
+    opacity: 0; transform: translateY(40px); pointer-events: none; will-change: opacity, transform;
+    max-width: 520px; margin: 0 auto;
+  }
+  .sheet.on { pointer-events: auto; }
+  .cats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cats a { display: flex; flex-direction: column; justify-content: center; min-height: 52px; padding: 7px 12px; border-radius: 14px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); }
+  .cats a:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .cats b { font-size: 15.5px; line-height: 1.15; letter-spacing: -0.01em; }
+  .cats span { font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+  .sheet .btn { width: 100%; margin-top: 10px; }
+
+  .plain { display: none; }
+  .plain article { padding: 28px 16px 8px; text-align: center; max-width: 560px; margin: 0 auto; }
+  .plain img { width: 70%; max-width: 300px; height: auto; margin: 0 auto 6px; border-radius: 18px; }
+  .plain h2 { margin-bottom: 14px; }
+  .plain .cats { text-align: left; }
+
   @media (prefers-reduced-motion: reduce) {
-    .story { height: auto; }
-    .stick { position: relative; top: 0; }
-    .cue { display: none; }
+    .story { height: auto !important; padding-bottom: 20px; }
+    .stick { display: none; }
+    .plain { display: block; }
   }
 </style>
+<noscript><style>.story{height:auto!important}.story .stick{display:none}.story .plain{display:block}</style></noscript>
 
 <script>
+  interface Ch { id: string; count: number; stages: number[]; scrub: number; label: string; heads: string[] }
   const root = document.querySelector<HTMLElement>('[data-story]');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (root && !reduce) {
-    const count = +root.dataset.count!, fw = +root.dataset.w!, fh = +root.dataset.h!, src = root.dataset.src!;
+    const D = JSON.parse(root.dataset.story!) as { w: number; h: number; clip: number; hold: number; src: string; chapters: Ch[] };
     const stick = root.querySelector<HTMLElement>('.stick')!;
     const cv = root.querySelector('canvas')!;
     const ctx = cv.getContext('2d')!;
-    const o1 = root.querySelector<HTMLElement>('.o1')!, o2 = root.querySelector<HTMLElement>('.o2')!;
-    const frames: (ImageBitmap | HTMLImageElement | null)[] = new Array(count).fill(null);
-    let shown = -1, want = 0, raf = 0;
+    const txt = root.querySelector<HTMLElement>('.txt')!;
+    const head = root.querySelector<HTMLElement>('[data-head]')!;
+    const label = root.querySelector<HTMLElement>('[data-label]')!;
+    const cue = root.querySelector<HTMLElement>('[data-cue]')!;
+    const sheets = [...root.querySelectorAll<HTMLElement>('[data-sheet]')];
+    const dots = [...root.querySelectorAll<HTMLElement>('[data-dot]')];
+    type Img = ImageBitmap | HTMLImageElement;
+    const frames: (Img | null)[][] = D.chapters.map((c) => new Array(c.count).fill(null));
+    const starts: number[] = [];
+    let acc = 0;
+    for (const c of D.chapters) { starts.push(acc); acc += c.scrub + D.hold; }
+    const total = acc;
 
-    const load = async (i: number) => {
-      if (frames[i]) return;
+    // ---------- loading: first chapter coarse, then everything in scroll order ----------
+    const load = async (c: number, i: number) => {
+      if (frames[c][i]) return;
       try {
-        const res = await fetch(`${src}${String(i).padStart(4, '0')}.webp`);
-        const blob = await res.blob();
-        frames[i] = 'createImageBitmap' in window ? await createImageBitmap(blob) : await new Promise<HTMLImageElement>((ok) => { const im = new Image(); im.onload = () => ok(im); im.src = URL.createObjectURL(blob); });
-        if (i === 0) { root.classList.add('ready'); }
+        const blob = await (await fetch(`${D.src}${D.chapters[c].id}/${String(i).padStart(4, '0')}.webp`)).blob();
+        frames[c][i] = 'createImageBitmap' in window ? await createImageBitmap(blob) : await new Promise<HTMLImageElement>((ok) => { const im = new Image(); im.onload = () => ok(im); im.src = URL.createObjectURL(blob); });
+        if (c === 0 && i === 0) root.classList.add('ready');
         schedule();
       } catch {}
     };
-    // coarse pass first (every 4th), then the rest: usable almost immediately on mobile data
-    const order = [...Array(count).keys()].sort((a, b) => (a % 4 === 0 ? 0 : a % 2 === 0 ? 1 : 2) - (b % 4 === 0 ? 0 : b % 2 === 0 ? 1 : 2) || a - b);
-    (async () => { await load(0); let i = 1; const next = async (): Promise<void> => { while (i < order.length) { await load(order[i++]); } }; await Promise.all([next(), next(), next()]); })();
+    const queue: [number, number][] = [];
+    const pass = (c: number, step: number) => { for (let i = 0; i < D.chapters[c].count; i += step) queue.push([c, i]); };
+    pass(0, 6); D.chapters.forEach((_, c) => c && pass(c, 12)); D.chapters.forEach((_, c) => pass(c, 3)); D.chapters.forEach((_, c) => pass(c, 1));
+    (async () => { await load(0, 0); let k = 0; const run = async () => { while (k < queue.length) { const [c, i] = queue[k++]; await load(c, i); } }; await Promise.all([run(), run(), run(), run()]); })();
 
-    const size = () => {
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
-      cv.width = Math.round(stick.clientWidth * dpr);
-      cv.height = Math.round(stick.clientHeight * dpr);
-      shown = -1; schedule();
+    // ---------- drawing ----------
+    let want = { c: 0, f: 0, next: -1, mix: 0 }, drawn = '', raf = 0;
+    const nearest = (c: number, i: number): Img | null => {
+      const a = frames[c];
+      for (let d = 0; d < a.length; d++) { if (a[i - d]) return a[i - d]; if (a[i + d]) return a[i + d]; }
+      return null;
     };
-    const nearest = (i: number) => { for (let d = 0; d < count; d++) { if (frames[i - d]) return i - d; if (frames[i + d]) return i + d; } return -1; };
+    let bg = '';
+    const put = (im: Img, alpha: number) => {
+      const cw = cv.width, ch = cv.height;
+      const wide = cw / ch > D.w / D.h * 1.25;                 // desktop: fit the height, cream fills the sides
+      const s = wide ? ch / D.h : Math.max(cw / D.w, ch / D.h);
+      const dw = D.w * s, dh = D.h * s;
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(im as any, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+      ctx.globalAlpha = 1;
+    };
     const draw = () => {
       raf = 0;
-      const i = nearest(want);
-      if (i < 0 || i === shown) return;
-      const im = frames[i]!;
-      const cw = cv.width, ch = cv.height;
-      const wide = cw / ch > 0.9;                       // desktop: show the whole frame height
-      const s = wide ? ch / fh : Math.max(cw / fw, ch / fh);
-      const dw = fw * s, dh = fh * s;
-      if (wide) {                                       // fill the sides with a soft, stretched copy
-        ctx.filter = 'blur(40px) brightness(.96)';
-        const s2 = Math.max(cw / fw, ch / fh) * 1.1;
-        ctx.drawImage(im as any, (cw - fw * s2) / 2, (ch - fh * s2) / 2, fw * s2, fh * s2);
-        ctx.filter = 'none';
+      const a = nearest(want.c, Math.round(want.f));
+      if (!a) return;
+      const b = want.next >= 0 && want.mix > 0 ? nearest(want.next, 0) : null;
+      const key = `${want.c}:${frames[want.c].indexOf(a)}:${b ? want.mix.toFixed(2) : ''}:${cv.width}`;
+      if (key === drawn) return;
+      if (!bg) {                                              // sample the studio background once
+        const t = document.createElement('canvas'); t.width = t.height = 1;
+        const x = t.getContext('2d')!; x.drawImage(a as any, 2, 2, 1, 1, 0, 0, 1, 1);
+        const [r, g, bl] = x.getImageData(0, 0, 1, 1).data; bg = `rgb(${r},${g},${bl})`;
+        root.style.setProperty('--bgc', bg);
       }
-      ctx.drawImage(im as any, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
-      shown = i;
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, cv.width, cv.height);
+      put(a, 1);
+      if (b) put(b, want.mix);
+      drawn = key;
     };
     const schedule = () => { if (!raf) raf = requestAnimationFrame(draw); };
-    const clamp = (v: number) => Math.max(0, Math.min(1, v));
+    const size = () => {
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      cv.width = Math.round(stick.clientWidth * dpr); cv.height = Math.round(stick.clientHeight * dpr);
+      drawn = ''; schedule();
+    };
+
+    // ---------- scroll -> state ----------
+    const clamp = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+    const unit = () => (root.offsetHeight - stick.clientHeight) / total;   // one "screen" of story in pixels
+    // ?story=2.4 shows the story as it looks that many screens in (for checking it)
+    const forced = parseFloat(new URLSearchParams(location.search).get('story') || '');
+    let shown = '0:0';
+    const setText = (c: number, s: number) => {
+      const k = `${c}:${s}`; if (k === shown) return; shown = k;
+      txt.classList.add('swap');
+      setTimeout(() => { head.textContent = D.chapters[c].heads[s]; label.textContent = D.chapters[c].label; txt.classList.remove('swap'); }, 180);
+    };
     const onScroll = () => {
-      const r = root.getBoundingClientRect();
-      const span = r.height - stick.clientHeight;
-      const p = clamp((-r.top + parseFloat(getComputedStyle(stick).top)) / span);
-      want = Math.round(p * (count - 1));
-      const a = 1 - clamp((p - 0.06) / 0.2);
-      o1.style.opacity = String(a);
-      o1.style.transform = `translateY(${(1 - a) * -24}px)`;
-      o1.style.visibility = a <= 0 ? 'hidden' : 'visible';
-      const b = clamp((p - 0.62) / 0.2);
-      o2.style.opacity = String(b);
-      o2.style.transform = `translateY(${(1 - b) * 24}px)`;
-      o2.style.visibility = b <= 0 ? 'hidden' : 'visible';
+      const top = parseFloat(getComputedStyle(stick).top) || 0;
+      const t = isNaN(forced) ? clamp((top - root.getBoundingClientRect().top) / unit(), 0, total) : clamp(forced, 0, total);
+      let c = D.chapters.length - 1;
+      while (c > 0 && t < starts[c]) c--;
+      const ch = D.chapters[c], local = t - starts[c];
+      let f: number, hold = -1;
+      if (local < ch.scrub) f = (local / ch.scrub) * (ch.count - 1);
+      else { f = ch.count - 1; hold = clamp((local - ch.scrub) / D.hold); }
+      const last = c === D.chapters.length - 1;
+      const mix = hold > 0.82 && !last ? (hold - 0.82) / 0.18 : 0;
+      want = { c, f, next: last ? -1 : c + 1, mix };
+      load(c, Math.round(f));                                  // make sure the frame on screen is fetched first
+      if (mix > 0) load(c + 1, 0);
+      // headline = the nearest stage
+      let s = 0; ch.stages.forEach((st, i) => { if (Math.abs(st - f) < Math.abs(ch.stages[s] - f)) s = i; });
+      if (mix > 0.5) setText(c + 1, 0); else setText(c, s);
+      // the card of the finished dish
+      sheets.forEach((el, i) => {
+        const on = i === c && hold >= 0;
+        const a = on ? clamp(hold / 0.18) * (last ? 1 : 1 - clamp((hold - 0.72) / 0.12)) : 0;
+        el.style.opacity = String(a);
+        el.style.transform = `translateY(${(1 - a) * 40}px)`;
+        el.classList.toggle('on', a > 0.6);
+        el.setAttribute('aria-hidden', a > 0.6 ? 'false' : 'true');
+        el.querySelectorAll('a').forEach((x) => (x.tabIndex = a > 0.6 ? 0 : -1));
+      });
+      cue.style.opacity = t < 0.15 ? '1' : '0';
+      dots.forEach((d, i) => (i === (mix > 0.5 ? c + 1 : c) ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
       schedule();
     };
+    const go = (t: number) => scrollTo({ top: root.offsetTop + t * unit() + 2, behavior: 'smooth' });
+    dots.forEach((d, i) => d.addEventListener('click', () => go(starts[i])));
     addEventListener('scroll', onScroll, { passive: true });
-    addEventListener('resize', size);
+    addEventListener('resize', () => { size(); onScroll(); });
     size(); onScroll();
-    // ?story=0.8 jumps to that point of the animation (used for checking it)
-    const jump = parseFloat(new URLSearchParams(location.search).get('story') || '');
-    if (!isNaN(jump)) requestAnimationFrame(() => scrollTo(0, root.offsetTop + (root.offsetHeight - stick.clientHeight) * jump));
   }
 </script>

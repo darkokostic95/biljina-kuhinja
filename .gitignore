@@ -12,3 +12,4 @@ design/gen/
 *.blend1
 design/*.png
 blender/assets/
+.venv/

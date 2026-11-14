@@ -106,10 +106,9 @@ Chapter joins (T5→P1, P4→M1) are done in the page as a soft cross-fade, not 
 
 ---
 
-## 5. Where this stands (2026-11-14) — pick up here in a new session
+## 5. Where this stands (2026-11-14, evening)
 
-- **Blocked on generation only.** The Higgsfield connector exposed just read tools (balance, models, history) in the old session. Darko is reconnecting it; he has a 3-day unlimited trial and wants generation done **through the connector, not through Chrome**.
-- **First thing to do:** list the Higgsfield tools. If a generate tool exists: generate the key images (§3) at 9:16, then the clips with start image → end image, no audio, 5–8 s. Prefer a model marked unlimited (Seedance 2.0 / 2.5 in the catalog). Do one test clip (P1→P2) and show it to Darko before the rest.
-- **Then build:** download clips to `blender/out/clips/` (not in git), extract frames with ffmpeg (`brew install ffmpeg` was started; check `ffmpeg -version`), convert with `scripts/frames.py`, make `src/components/Story.astro` chapter-aware (clips, headline cues, category cards per §1–2), keep the reduce-motion fallback.
-- **Live now:** https://darkokostic95.github.io/biljina-kuhinja/ with the old flat-lay hero (backup tag `v1-simple`). Checking pages at phone width: `design/shots/shot.sh <path> <name> [height]` with `npx astro dev --port 4321` running.
-- **Darko's preferences so far:** phone first; palette B; Bricolage Grotesque, no handwriting fonts; no checkboxes on ingredients; no photo file names anywhere; real-looking food, not cartoon; style of the croissant reel.
+- **Built and live.** The 12 images and 9 clips were generated in Claude chat with Higgsfield (project "Biljina Kuhinja landing"; brief in `HIGGSFIELD-BRIEF.md`) because the plan's unlimited generations don't work from Claude Code. Sources are in `blender/out/media/` (not in git).
+- **Pipeline:** `.venv/bin/python scripts/clips_to_frames.py [fps] [quality]` extracts frames (6 fps, 540×960 WebP, ~5 MB for 318 frames) into `public/hero/<chapter>/` and writes `public/hero/story.json`. ffmpeg comes from the `imageio-ffmpeg` package in `.venv` (no brew needed).
+- **Page:** `src/components/Story.astro` is chapter-aware: 0.75 screens of scroll per clip, 0.85 screens hold on each finished dish while its group card is up, cross-fade into the next chapter, headline per stage, chapter dots, skip link, reduce-motion/no-script fallback with the three finished dishes. `?story=3.4` shows the story as it looks 3.4 screens in (for checking).
+- **Not done:** desktop uses the same portrait frames (centered on the cream background); recipe group tiles below still use emoji; Blender is no longer used.
