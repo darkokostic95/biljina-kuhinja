@@ -103,3 +103,13 @@ Chapter joins (T5→P1, P4→M1) are done in the page as a soft cross-fade, not 
 - Frame extraction needs `ffmpeg` (`brew install ffmpeg`).
 - The video is decoration: all text, links and groups are real HTML, so search engines and screen readers get everything.
 - Generated media is marked as illustration in the footer ("Fotografije i video su ilustracije").
+
+---
+
+## 5. Where this stands (2026-11-14) — pick up here in a new session
+
+- **Blocked on generation only.** The Higgsfield connector exposed just read tools (balance, models, history) in the old session. Darko is reconnecting it; he has a 3-day unlimited trial and wants generation done **through the connector, not through Chrome**.
+- **First thing to do:** list the Higgsfield tools. If a generate tool exists: generate the key images (§3) at 9:16, then the clips with start image → end image, no audio, 5–8 s. Prefer a model marked unlimited (Seedance 2.0 / 2.5 in the catalog). Do one test clip (P1→P2) and show it to Darko before the rest.
+- **Then build:** download clips to `blender/out/clips/` (not in git), extract frames with ffmpeg (`brew install ffmpeg` was started; check `ffmpeg -version`), convert with `scripts/frames.py`, make `src/components/Story.astro` chapter-aware (clips, headline cues, category cards per §1–2), keep the reduce-motion fallback.
+- **Live now:** https://darkokostic95.github.io/biljina-kuhinja/ with the old flat-lay hero (backup tag `v1-simple`). Checking pages at phone width: `design/shots/shot.sh <path> <name> [height]` with `npx astro dev --port 4321` running.
+- **Darko's preferences so far:** phone first; palette B; Bricolage Grotesque, no handwriting fonts; no checkboxes on ingredients; no photo file names anywhere; real-looking food, not cartoon; style of the croissant reel.
