@@ -228,7 +228,8 @@ const pad = (i: number) => String(i).padStart(4, '0');
     (async () => { await load(0, 0); let k = 0; const run = async () => { while (k < queue.length) { const [c, i] = queue[k++]; await load(c, i); } }; await Promise.all([run(), run(), run(), run()]); })();
 
     // ---------- drawing ----------
-    let want = { c: 0, f: 0, next: -1, mix: 0 }, drawn = '', raf = 0;
+    let want = { c: 0, f: 0, next: -1, mix: 0, lift: 0 }, drawn = '', raf = 0;
+    const phone = matchMedia('(max-width: 899px)');   // text and the group card lie over the film
     const nearest = (c: number, i: number): Img | null => {
       const a = frames[c];
       for (let d = 0; d < a.length; d++) { if (a[i - d]) return a[i - d]; if (a[i + d]) return a[i + d]; }
@@ -240,8 +241,10 @@ const pad = (i: number) => String(i).padStart(4, '0');
     const put = (im: Img, alpha: number) => {
       const cw = cv.width, ch = cv.height;
       const contain = Math.min(cw / D.w, ch / D.h), cover = Math.max(cw / D.w, ch / D.h);
-      const s = Math.min(cover, contain * 1.15);
-      const dw = D.w * s, dh = D.h * s, x = (cw - dw) / 2, y = (ch - dh) / 2;
+      // phone: fit the whole frame, sit a little lower (the headline is on top), and shrink and rise when the group card comes up
+      const over = phone.matches, lift = over ? want.lift : 0;
+      const s = (over ? contain * 1.04 : Math.min(cover, contain * 1.15)) * (1 - 0.2 * lift);
+      const dw = D.w * s, dh = D.h * s, x = (cw - dw) / 2, y = (ch - dh) / 2 + (over ? ch * (0.05 - 0.11 * lift) : 0);
       ctx.globalAlpha = alpha;
       ctx.drawImage(im as any, x, y, dw, dh);
       ctx.globalAlpha = 1;
@@ -258,7 +261,7 @@ const pad = (i: number) => String(i).padStart(4, '0');
       const a = nearest(want.c, Math.round(want.f));
       if (!a) return;
       const b = want.next >= 0 && want.mix > 0 ? nearest(want.next, 0) : null;
-      const key = `${want.c}:${frames[want.c].indexOf(a)}:${b ? want.mix.toFixed(2) : ''}:${cv.width}`;
+      const key = `${want.c}:${frames[want.c].indexOf(a)}:${b ? want.mix.toFixed(2) : ''}:${want.lift.toFixed(3)}:${cv.width}`;
       if (key === drawn) return;
       if (!bg) {                                              // sample the studio background once
         const t = document.createElement('canvas'); t.width = t.height = 1;
@@ -300,7 +303,8 @@ const pad = (i: number) => String(i).padStart(4, '0');
       else { f = ch.count - 1; hold = clamp((local - ch.scrub) / D.hold); }
       const last = c === D.chapters.length - 1;
       const mix = hold > 0.82 && !last ? (hold - 0.82) / 0.18 : 0;
-      want = { c, f, next: last ? -1 : c + 1, mix };
+      const lift = hold >= 0 ? clamp(hold / 0.18) * (last ? 1 : 1 - clamp((hold - 0.72) / 0.12)) : 0;   // same curve as the card
+      want = { c, f, next: last ? -1 : c + 1, mix, lift };
       load(c, Math.round(f));                                  // make sure the frame on screen is fetched first
       if (mix > 0) load(c + 1, 0);
       // headline = the nearest stage
