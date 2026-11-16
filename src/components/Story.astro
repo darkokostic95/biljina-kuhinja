@@ -264,6 +264,8 @@ const pad = (i: number) => String(i).padStart(4, '0');
       const a = nearest(want.c, Math.round(want.f));
       if (!a) return;
       const b = want.next >= 0 && want.mix > 0 ? nearest(want.next, 0) : null;
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      if (Math.abs(cv.width - cv.clientWidth * dpr) > 2 || Math.abs(cv.height - cv.clientHeight * dpr) > 2) size();   // never draw into a canvas of the wrong shape
       const key = `${fmt}:${want.c}:${a[1]}:${b ? want.mix.toFixed(2) : ''}:${cv.width}x${cv.height}`;
       if (key === drawn) return;
       put(a[0], 1);
@@ -273,10 +275,17 @@ const pad = (i: number) => String(i).padStart(4, '0');
     const schedule = () => { if (!raf) raf = requestAnimationFrame(draw); };
     const size = () => {
       const dpr = Math.min(2, window.devicePixelRatio || 1);
-      cv.width = Math.round(cv.clientWidth * dpr); cv.height = Math.round(cv.clientHeight * dpr);
+      const w = Math.round(cv.clientWidth * dpr), h = Math.round(cv.clientHeight * dpr);
+      if (!w || !h) return;
       if (pick() !== fmt) { fmt = pick(); start(); }
+      if (w === cv.width && h === cv.height) return;
+      cv.width = w; cv.height = h;
       drawn = ''; schedule();
     };
+    // the canvas can get its real size after this script runs (styles still loading, browser bars moving), so follow it
+    if ('ResizeObserver' in window) new ResizeObserver(() => { size(); onScroll(); }).observe(cv);
+    addEventListener('load', () => { size(); onScroll(); });
+    addEventListener('pageshow', () => { size(); onScroll(); });
 
     // ---------- scroll -> state ----------
     const clamp = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
