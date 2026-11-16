@@ -214,23 +214,42 @@ const pad = (i: number) => String(i).padStart(4, '0');
     // ---------- which film: wide for landscape screens, tall for portrait ----------
     const pick = (): Fmt => (innerWidth >= innerHeight ? 'wide' : 'tall');
     let fmt: Fmt = pick(), gen = 0;
-    let frames: (Img | null)[][] = [];
+    // Frames are kept as small compressed files; only a handful around the current position are decoded
+    // (a decoded frame is ~2.4 MB, all of them together would be ~1 GB and phones kill the page).
+    let files: (Blob | null)[][] = [];
+    const MAX = 24;
+    const pics = new Map<string, Img>();      // decoded frames, oldest first
+    const busy = new Set<string>();
+    const decode = async (c: number, i: number, g = gen) => {
+      const k = `${c}:${i}`, blob = files[c]?.[i];
+      if (!blob || busy.has(k)) return;
+      if (pics.has(k)) { const p = pics.get(k)!; pics.delete(k); pics.set(k, p); return; }
+      busy.add(k);
+      try {
+        const im = 'createImageBitmap' in window ? await createImageBitmap(blob) : await new Promise<HTMLImageElement>((ok, no) => { const el = new Image(); el.onload = () => ok(el); el.onerror = no; el.src = URL.createObjectURL(blob); });
+        if (g !== gen) { (im as ImageBitmap).close?.(); return; }
+        pics.set(k, im);
+        while (pics.size > MAX) { const [old, p] = pics.entries().next().value!; pics.delete(old); (p as ImageBitmap).close?.(); }
+        if (c === 0 && i === 0) root.classList.add('ready');
+        schedule();
+      } catch {} finally { busy.delete(k); }
+    };
 
     // ---------- loading: first chapter coarse, then everything in scroll order ----------
     const load = async (c: number, i: number, g = gen) => {
-      if (g !== gen || frames[c][i]) return;
+      if (g !== gen || files[c][i]) return;
       try {
         const blob = await (await fetch(`${D.src}${fmt}/${D.chapters[c].id}/${String(i).padStart(4, '0')}.webp`)).blob();
-        const im = 'createImageBitmap' in window ? await createImageBitmap(blob) : await new Promise<HTMLImageElement>((ok) => { const el = new Image(); el.onload = () => ok(el); el.src = URL.createObjectURL(blob); });
         if (g !== gen) return;
-        frames[c][i] = im;
-        if (c === 0 && i === 0) root.classList.add('ready');
+        files[c][i] = blob;
+        if (c === 0 && i === 0) decode(0, 0, g);
         schedule();
       } catch {}
     };
     const start = () => {
       const g = ++gen;
-      frames = D.chapters.map((c) => new Array(c.count).fill(null));
+      files = D.chapters.map((c) => new Array(c.count).fill(null));
+      pics.forEach((p) => (p as ImageBitmap).close?.()); pics.clear();
       const queue: [number, number][] = [];
       const pass = (c: number, step: number) => { for (let i = 0; i < D.chapters[c].count; i += step) queue.push([c, i]); };
       pass(0, 8); D.chapters.forEach((_, c) => c && pass(c, 16)); D.chapters.forEach((_, c) => pass(c, 4)); D.chapters.forEach((_, c) => pass(c, 2)); D.chapters.forEach((_, c) => pass(c, 1));
@@ -239,9 +258,15 @@ const pad = (i: number) => String(i).padStart(4, '0');
 
     // ---------- drawing: the frame always covers the whole screen ----------
     let want = { c: 0, f: 0, next: -1, mix: 0 }, ease = { c: 0, f: 0 }, drawn = '', raf = 0;
+    // the decoded frame closest to i; asks for i itself (and its neighbours) to be decoded
     const nearest = (c: number, i: number): [Img, number] | null => {
-      const a = frames[c];
-      for (let d = 0; d < a.length; d++) { if (a[i - d]) return [a[i - d]!, i - d]; if (a[i + d]) return [a[i + d]!, i + d]; }
+      const n = files[c]?.length ?? 0;
+      for (let d = 0; d < n; d++) { if (files[c][i - d]) { decode(c, i - d); break; } if (files[c][i + d]) { decode(c, i + d); break; } }
+      for (const d of [1, 2, 3]) { if (i + d < n) decode(c, i + d); if (i - d >= 0) decode(c, i - d); }
+      for (let d = 0; d < n; d++) {
+        const lo = pics.get(`${c}:${i - d}`); if (lo) return [lo, i - d];
+        const hi = pics.get(`${c}:${i + d}`); if (hi) return [hi, i + d];
+      }
       return null;
     };
     const put = (im: Img, alpha: number) => {
