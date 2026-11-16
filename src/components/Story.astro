@@ -119,7 +119,7 @@ const pad = (i: number) => String(i).padStart(4, '0');
 
   /* ---------- the film (only when scripts run and motion is allowed) ---------- */
   .stick { display: none; }
-  .story.live { margin-top: calc(-1 * var(--head-h)); height: calc(var(--total) * 100vh + 100vh); height: calc(var(--total) * 100svh + 100svh); background: #1c130e; }
+  .story.live { margin-top: calc(-1 * var(--head-h)); height: calc(var(--total) * var(--k, 1) * 100vh + 100vh); height: calc(var(--total) * var(--k, 1) * 100svh + 100svh); background: #1c130e; }
   .story.live .plain { display: none; }
   .story.live .stick { display: block; position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #1c130e; color: var(--fg); }
   .stick.dark { --fg: #fff; --fg2: #ffffffd9; --acc: var(--honey, #E0A53C); }
@@ -155,6 +155,9 @@ const pad = (i: number) => String(i).padStart(4, '0');
   .cue { position: absolute; left: 0; right: 0; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px); display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--fg); pointer-events: none; transition: opacity .3s; text-shadow: 0 0 12px #f6efe4; }
   .cue i { width: 2px; height: 22px; background: currentColor; border-radius: 2px; animation: cue 1.4s infinite ease-in-out; transform-origin: top; }
   @keyframes cue { 0%, 100% { transform: scaleY(.3); opacity: .4; } 50% { transform: scaleY(1); opacity: 1; } }
+
+  /* a finger flick moves the page much further than a mouse wheel, so on phones the film gets more scroll per clip */
+  @media (orientation: portrait) { .story { --k: 1.8; } }
 
   /* ---------- wide screens: text on the left of the film, food on the right ---------- */
   @media (min-width: 900px) and (orientation: landscape) {
@@ -244,7 +247,7 @@ const pad = (i: number) => String(i).padStart(4, '0');
     };
 
     // ---------- drawing: the frame always covers the whole screen ----------
-    let want = { c: 0, f: 0, next: -1, mix: 0 }, drawn = '', raf = 0;
+    let want = { c: 0, f: 0, next: -1, mix: 0 }, ease = { c: 0, f: 0 }, drawn = '', raf = 0;
     const nearest = (c: number, i: number): [Img, number] | null => {
       const a = frames[c];
       for (let d = 0; d < a.length; d++) { if (a[i - d]) return [a[i - d]!, i - d]; if (a[i + d]) return [a[i + d]!, i + d]; }
@@ -261,7 +264,10 @@ const pad = (i: number) => String(i).padStart(4, '0');
     };
     const draw = () => {
       raf = 0;
-      const a = nearest(want.c, Math.round(want.f));
+      // glide to the frame the scroll asks for instead of jumping, so a fast flick still plays as motion
+      if (ease.c !== want.c || !isNaN(forced)) ease = { c: want.c, f: want.f };
+      else { const d = want.f - ease.f; ease.f = Math.abs(d) < 0.4 ? want.f : ease.f + d * 0.16; if (ease.f !== want.f) schedule(); }
+      const a = nearest(want.c, Math.round(ease.f));
       if (!a) return;
       const b = want.next >= 0 && want.mix > 0 ? nearest(want.next, 0) : null;
       const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -319,7 +325,7 @@ const pad = (i: number) => String(i).padStart(4, '0');
       // white text while the text side of the frame is dark (with a little hysteresis so it doesn't flicker)
       const lum = cur !== c ? +D.chapters[cur].lum[fmt][0] : +ch.lum[fmt][Math.round(f)];
       if (dark ? lum >= 4 : lum <= 2) dark = !dark;
-      const onFilm = isNaN(forced) ? raw < total + 0.92 : true;   // the film still fills the top of the screen
+      const onFilm = isNaN(forced) ? -root.getBoundingClientRect().top < root.offsetHeight - innerHeight * 0.08 : true;   // the film still fills the top of the screen
       stick.classList.toggle('dark', dark);
       document.body.classList.toggle('film', onFilm);
       document.body.classList.toggle('film-dark', onFilm && dark);
