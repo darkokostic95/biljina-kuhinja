@@ -87,9 +87,6 @@ const pad = (i: number) => String(i).padStart(4, '0');
       </div>
     </div>
 
-    <ol class="dots" aria-label="Chapters">
-      {chapters.map((c, i) => <li><button type="button" data-dot={i} aria-label={c.label[lang]} aria-current={i === 0 ? 'true' : undefined}></button></li>)}
-    </ol>
     <a class="skip" href={url(lang, 'recipes')}>{skip}</a>
     <div class="cue" data-cue>{cue}<i></i></div>
   </div>
@@ -136,7 +133,7 @@ const pad = (i: number) => String(i).padStart(4, '0');
   .stick.dark .shade.night { opacity: 1; }
 
   .side { position: absolute; inset: 0; pointer-events: none; }
-  .txt { position: absolute; left: 0; right: 0; top: 0; padding: calc(var(--head-h) + 18px) 56px 0 20px; }
+  .txt { position: absolute; left: 0; right: 0; top: 0; padding: calc(var(--head-h) + 18px) 20px 0 20px; }
   .txt h1 { font-size: clamp(36px, 11vw, 60px); line-height: .98; letter-spacing: -0.04em; max-width: 9.5ch; margin: 0; color: var(--fg); text-wrap: balance; }
   .sub { margin: 12px 0 0; max-width: 26ch; font-size: 15.5px; line-height: 1.35; font-weight: 600; color: var(--fg2); }
   .txt h1, .txt .label, .sub { transition: opacity .28s, transform .28s, color .45s; }
@@ -147,10 +144,6 @@ const pad = (i: number) => String(i).padStart(4, '0');
   .sheet.on { visibility: visible; pointer-events: auto; }
   .sheet .btn { width: 100%; box-shadow: 0 10px 26px #3b2a2040; }
 
-  .dots { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
-  .dots button { width: 28px; height: 28px; display: grid; place-items: center; }
-  .dots button::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--fg); opacity: .35; transition: .2s; }
-  .dots button[aria-current='true']::after { background: var(--acc); opacity: 1; transform: scale(1.5); }
   .skip { position: absolute; right: 8px; top: calc(var(--head-h) + 6px); font-size: 13px; font-weight: 800; color: var(--fg2); padding: 10px 8px; min-height: 40px; transition: color .45s; }
   .cue { position: absolute; left: 0; right: 0; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px); display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--fg); pointer-events: none; transition: opacity .3s; text-shadow: 0 0 12px #f6efe4; }
   .cue i { width: 2px; height: 22px; background: currentColor; border-radius: 2px; animation: cue 1.4s infinite ease-in-out; transform-origin: top; }
@@ -174,7 +167,6 @@ const pad = (i: number) => String(i).padStart(4, '0');
     .sheet .cats { opacity: var(--a, 0); transform: translateY(calc((1 - var(--a, 0)) * 16px)); }
     .cue { left: max(40px, calc((100vw - 1320px) / 2)); right: auto; bottom: 30px; align-items: flex-start; text-shadow: none; }
     .skip { top: auto; right: 54px; bottom: 22px; }
-    .dots { right: 18px; }
   }
 
   /* ---------- no motion / no script ---------- */
@@ -212,7 +204,6 @@ const pad = (i: number) => String(i).padStart(4, '0');
     const sub = root.querySelector<HTMLElement>('[data-sub]')!;
     const cue = root.querySelector<HTMLElement>('[data-cue]')!;
     const sheets = [...root.querySelectorAll<HTMLElement>('[data-sheet]')];
-    const dots = [...root.querySelectorAll<HTMLElement>('[data-dot]')];
     const lightShade = root.querySelector<HTMLElement>('.shade.light')!;
     type Img = ImageBitmap | HTMLImageElement;
     const starts: number[] = [];
@@ -341,11 +332,8 @@ const pad = (i: number) => String(i).padStart(4, '0');
         el.querySelectorAll('a').forEach((x) => (x.tabIndex = on ? 0 : -1));
       });
       cue.style.opacity = t < 0.15 ? '1' : '0';
-      dots.forEach((d, i) => (i === cur ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
       schedule();
     };
-    const go = (t: number) => scrollTo({ top: root.offsetTop + t * unit() + 2, behavior: 'smooth' });
-    dots.forEach((d, i) => d.addEventListener('click', () => go(starts[i])));
     addEventListener('scroll', onScroll, { passive: true });
     addEventListener('resize', () => { size(); onScroll(); });
     start(); size(); onScroll();
