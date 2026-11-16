@@ -54,7 +54,7 @@ const chapters = story.chapters.map((c) => ({ ...c, ...TEXT[c.id], scrub: (c.sta
 const total = chapters.reduce((s, c) => s + c.scrub + HOLD, 0);
 const cue = lang === 'sr' ? 'Skrolujte' : 'Scroll';
 const see = lang === 'sr' ? 'Pogledaj recepte' : 'See the recipes';
-const skip = lang === 'sr' ? 'Preskoči' : 'Skip';
+const skip = lang === 'sr' ? 'Idi na sve recepte' : 'Go to all recipes';
 const data = { wide: story.wide, tall: story.tall, hold: HOLD, src: asset('hero/'), chapters: chapters.map((c) => ({ id: c.id, count: c.count, stages: c.stages, lum: c.lum, scrub: c.scrub, label: c.label[lang], sub: c.sub[lang], heads: c.heads.map((h) => h[lang]) })) };
 const pad = (i: number) => String(i).padStart(4, '0');
 ---
@@ -90,7 +90,7 @@ const pad = (i: number) => String(i).padStart(4, '0');
     <ol class="dots" aria-label="Chapters">
       {chapters.map((c, i) => <li><button type="button" data-dot={i} aria-label={c.label[lang]} aria-current={i === 0 ? 'true' : undefined}></button></li>)}
     </ol>
-    <a class="skip" href="#posle">{skip}</a>
+    <a class="skip" href={url(lang, 'recipes')}>{skip}</a>
     <div class="cue" data-cue>{cue}<i></i></div>
   </div>
 
