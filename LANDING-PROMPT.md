@@ -112,3 +112,11 @@ Chapter joins (T5→P1, P4→M1) are done in the page as a soft cross-fade, not 
 - **Pipeline:** `.venv/bin/python scripts/clips_to_frames.py [fps] [quality]` extracts frames (6 fps, 540×960 WebP, ~5 MB for 318 frames) into `public/hero/<chapter>/` and writes `public/hero/story.json`. ffmpeg comes from the `imageio-ffmpeg` package in `.venv` (no brew needed).
 - **Page:** `src/components/Story.astro` is chapter-aware: 0.75 screens of scroll per clip, 0.85 screens hold on each finished dish while its group card is up, cross-fade into the next chapter, headline per stage, chapter dots, skip link, reduce-motion/no-script fallback with the three finished dishes. `?story=3.4` shows the story as it looks 3.4 screens in (for checking).
 - **Not done:** desktop uses the same portrait frames (centered on the cream background); recipe group tiles below still use emoji; Blender is no longer used.
+
+---
+
+## 6. v3 "the film is the page" (2026-11-16)
+
+- **Why:** a newer reference reel (cheesecake site "Casa Brûlée") showed what v2 lacked: the film fills the whole page, text sits on it, scenes go light → dark oven → light, real cooking actions. Brief: `HIGGSFIELD-BRIEF-V2.md`; media generated in Claude chat (Higgsfield project "Biljina Kuhinja landing v2"), sources in `blender/out/media/v2/{wide,tall}/` (not in git).
+- **Media:** 9 clips × 2 formats (16:9 for landscape screens, 9:16 for portrait), 8 s each. `scripts/clips_to_frames.py` writes `public/hero/{wide,tall}/<chapter>/NNNN.webp` (6 fps, 142 frames per chapter, ~11 MB per format; a visitor loads one format) and `story.json`, which also holds the brightness of the text area per frame.
+- **Page (`src/components/Story.astro`):** the film covers the whole screen behind a transparent top bar; label, headline, one line and a button sit on the left (desktop) or top (phone); text and logo turn white while the text area is dark; on each finished dish the recipe groups come up as pills. 0.9 screens of scroll per clip, 0.9 hold. Sections 1–5 above describe the older centered-object version (tag `v2-stages`).

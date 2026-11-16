@@ -56,7 +56,8 @@ const nav = [
     <header class="head">
       <div class="wrap">
         <a class="logo" href={url(lang, 'home')} aria-label={ui.site}>
-          <img src={asset('brand/logo-horizontal.svg')} alt={ui.site} width="675" height="202" />
+          <img class="dk" src={asset('brand/logo-horizontal.svg')} alt={ui.site} width="675" height="202" />
+          <img class="lt" src={asset('brand/logo-horizontal-light.svg')} alt="" width="675" height="202" />
         </a>
         <nav aria-label="Main">
           {nav.slice(2).map((n) => <a href={n.href} aria-current={active === n.id ? 'page' : undefined}>{n.label}</a>)}
